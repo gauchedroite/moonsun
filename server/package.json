@@ -1,0 +1,15 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "description": "server",
+  "main": "app.js",
+  "author": {
+    "name": "christian",
+    "email": "ctrepanier@gmail.com"
+  },
+  "dependencies": {
+    "cors": "^2.5.2",
+    "express": "^4.10.6",
+    "path": "^0.4.9"
+  }
+}
