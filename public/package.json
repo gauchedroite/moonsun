@@ -1,14 +1,14 @@
 {
-  "name": "react-webpack-template",
+  "name": "moonsun-public",
   "version": "0.0.0",
-  "description": "",
+  "description": "moonsun-public",
   "main": "index.js",
+  "author": "Christian Trépanier",
+  "license": "MIT",
   "scripts": {
     "start": "webpack --progress --colors --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "BSD-2-Clause",
   "dependencies": {
     "react": "^0.12.2"
   },
