@@ -2,7 +2,7 @@
   "name": "moonsun-server",
   "version": "0.0.0",
   "description": "moonsun-server",
-  "main": "app.js",
+  "main": "server.js",
   "author": "Christian Trépanier",
   "license": "MIT",
   "dependencies": {
