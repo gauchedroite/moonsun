@@ -1,12 +1,10 @@
 {
-  "name": "server",
+  "name": "moonsun-server",
   "version": "0.0.0",
-  "description": "server",
+  "description": "moonsun-server",
   "main": "app.js",
-  "author": {
-    "name": "christian",
-    "email": "ctrepanier@gmail.com"
-  },
+  "author": "Christian Trépanier",
+  "license": "MIT",
   "dependencies": {
     "cors": "^2.5.2",
     "express": "^4.10.6",
