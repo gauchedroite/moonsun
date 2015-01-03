@@ -2,18 +2,24 @@
   "name": "moonsun-public",
   "version": "0.0.0",
   "description": "moonsun-public",
-  "main": "index.js",
   "author": "Christian Trépanier",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gauchedroite/moonsun.git"
+  },
+  "main": "index.js",
   "scripts": {
-    "start": "webpack --progress --colors --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "set NODE_ENV=dev&& webpack --progress --colors",
+    "prod": "set NODE_ENV=prod&& webpack --progress --colors -p",
+    "watch": "set NODE_ENV=watch&& webpack --progress --colors --watch",
+    "hot": "set NODE_ENV=hot&& webpack-dev-server --progress --colors --hot"
   },
   "dependencies": {
     "react": "^0.12.2"
   },
   "devDependencies": {
-    "jsx-loader": "^0.12.2",
-    "webpack": "^1.4.14"
+    "webpack": "^1.4.14",
+    "webpack-dev-server": "^1.7.0"
   }
 }

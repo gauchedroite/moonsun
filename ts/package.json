@@ -1,0 +1,14 @@
+{
+  "name": "moonsun-ts",
+  "version": "0.0.0",
+  "description": "moonsun-ts",
+  "author": "Christian Trépanier",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gauchedroite/moonsun.git"
+  },
+  "devDependencies": {
+    "tsd": "^0.5.7"
+  }
+}

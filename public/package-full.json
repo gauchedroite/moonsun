@@ -1,0 +1,24 @@
+{
+  "name": "moonsun-public",
+  "version": "0.0.0",
+  "description": "moonsun-public",
+  "main": "index.js",
+  "author": "Christian Trépanier",
+  "license": "MIT",
+  "scripts": {
+    "watch": "webpack --progress --colors --watch",
+    "hot": "webpack-dev-server --progress --colors --hot",
+    "deploy": "set NODE_ENV=production && webpack --progress --colors -p"
+  },
+  "dependencies": {
+    "react": "^0.12.2"
+  },
+  "devDependencies": {
+    "css-loader": "^0.9.0",
+    "jsx-loader": "^0.12.2",
+    "style-loader": "^0.8.2",
+    "url-loader": "^0.5.5",
+    "webpack": "^1.4.14",
+    "webpack-dev-server": "^1.7.0"
+  }
+}

@@ -2,9 +2,16 @@
   "name": "moonsun-server",
   "version": "0.0.0",
   "description": "moonsun-server",
-  "main": "server.js",
   "author": "Christian Trépanier",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gauchedroite/moonsun.git"
+  },
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "cors": "^2.5.2",
     "express": "^4.10.6",
