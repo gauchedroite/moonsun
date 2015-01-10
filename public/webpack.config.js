@@ -7,8 +7,8 @@ console.log("----------------------------------");
 var options = {
   cache: true,
   entry: {
-    app: ['./index'],
-    vendors: ['react']
+    app: ['./app'],
+    vendors: ['flux', 'typed-react', 'backbone', 'react']
   },
   output: {
     path: './build',
@@ -30,7 +30,7 @@ switch (process.env.NODE_ENV) {
     break;
   case "hot":
     options.output.publicPath = '/build';
-    options.entry.app = ['webpack/hot/dev-server', './index'];
+    options.entry.app = ['webpack/hot/dev-server', './app'];
     break;
 }
 
