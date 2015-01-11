@@ -11,12 +11,14 @@ Installation
 ---
 ```
 npm install
-tsd query react --action install
+tsd reinstall -so
 ```
 
-This will install `react.d.ts` in `typings/react`.
+`tsd` will install all the required TypeScript definition files for the libraries in `typings`. It will also create `typing\tsd.d.ts` that can be included in TypeScript files. Talking of `typing\tsd.d.ts`, the definition file for Typed-React has to be included manually because it doesn't exist (yet). Add this line:
 
-As a convenience I also create a link to the public project folder in order to make it easily accessible in Visual Studio as part of the project.
+`/// <reference path="../public/node_modules/typed-react/dist/typed-react.d.ts" />`
+
+As a convenience for myself, I create a link to the public project folder in order to make it easily accessible in Visual Studio as part of the project.
 
 ```
 mklink /D public ../public
