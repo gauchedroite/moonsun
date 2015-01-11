@@ -27,7 +27,7 @@ In these cases you must use some web server to serve up the content. Use the one
 
 The last case is `npm run hot`.
 This creates the packages, watches for any change in the sources to rebuild the packages and reload the web page automatically.
-Use http://localhost:8080 for this.
+Use `http://localhost:8080` for this.
 
 
 Using TypeScript

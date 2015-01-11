@@ -21,7 +21,7 @@ tsd reinstall -so
 As a convenience for myself, I create a link to the public project folder in order to make it easily accessible in Visual Studio as part of the project.
 
 ```
-mklink /D public ../public
+mklink /D public ..\public
 ```
 
 
