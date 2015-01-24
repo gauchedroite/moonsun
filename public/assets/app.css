@@ -1,0 +1,174 @@
+﻿body,
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  color: white;
+}
+.preload * {
+  -webkit-transition: none !important;
+          transition: none !important;
+}
+img {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+*:focus {
+  outline: none;
+}
+.game-wrapper {
+  position: absolute;
+  overflow: hidden;
+}
+.layer {
+  position: absolute;
+  overflow: hidden;
+  width: 960px;
+  height: 540px;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0) scale(1, 1);
+}
+.game {
+  background-color: #111;
+  font-family: 'Open Sans', sans-serif;
+}
+.cinema {
+  position: absolute;
+  width: 960px;
+  height: 540px;
+  -webkit-transition: opacity 0.75s;
+          transition: opacity 0.75s;
+}
+.cinema.my-hide {
+  -webkit-transition: opacity 0.25s;
+          transition: opacity 0.25s;
+  opacity: 0;
+}
+.cinema-wait {
+  position: absolute;
+  top: 20px;
+  width: 960px;
+  text-align: center;
+  -webkit-transition: opacity 0.75s ease 1.5s;
+          transition: opacity 0.75s ease 1.5s;
+}
+.cinema-wait.my-hide {
+  -webkit-transition: opacity 0.15s;
+          transition: opacity 0.15s;
+  opacity: 0;
+}
+.cinema-wait div {
+  display: inline-block;
+  background-color: gray;
+  padding: 8px 16px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: x-large;
+}
+.description {
+  position: absolute;
+  top: 0;
+  width: 960px;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0) scale(1, 1);
+  -webkit-transition: opacity 0.25s;
+          transition: opacity 0.25s;
+}
+.description.my-hide {
+  -webkit-transition: opacity 0.15s;
+          transition: opacity 0.15s;
+  opacity: 0;
+}
+.description div.description-text-default {
+  display: inline-block;
+  margin: 23px 30px 0 30px;
+  border: 5px solid #808080;
+  padding: 10px 15px;
+  font-size: 30px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: black;
+}
+.pop {
+  position: absolute;
+  top: 200px;
+  width: 960px;
+  -webkit-transform: translateY(-50px);
+          transform: translateY(-50px);
+  -webkit-transition: all 3s;
+          transition: all 3s;
+  -webkit-animation: pop-fadeout 3s ease forwards;
+          animation: pop-fadeout 3s ease forwards;
+}
+.pop.my-hide {
+  opacity: 0;
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+  -webkit-transition: opacity 0s;
+          transition: opacity 0s;
+  -webkit-animation: 0s none;
+          animation: 0s none;
+}
+.pop div {
+  text-shadow: 2px 2px 4px #333333, -2px -2px 4px #333333, 2px -2px 4px #333333, -2px 2px 4px #333333, 0 2px 4px #333333, 2px 0 4px #333333, 0 -2px 4px #333333, -2px 0 4px #333333;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 54px;
+  color: rgba(255, 255, 247, 0.9);
+  text-align: center;
+}
+@-webkit-keyframes pop-fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes pop-fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.main {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: black;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0) scale(1, 1);
+}
+.title {
+  width: 960px;
+  height: 32px;
+  text-align: right;
+  border-bottom: 10px solid #23b0ff;
+}
+.title div {
+  text-shadow: 2px 2px 4px #333333, -2px -2px 4px #333333, 2px -2px 4px #333333, -2px 2px 4px #333333, 0 2px 4px #333333, 2px 0 4px #333333, 0 -2px 4px #333333, -2px 0 4px #333333;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 27px;
+  color: #eee;
+  padding-right: 8px;
+  -webkit-transition: opacity 2s ease 1.5s;
+          transition: opacity 2s ease 1.5s;
+}
+.title div.my-hide {
+  -webkit-transition: opacity 0.15s;
+          transition: opacity 0.15s;
+  opacity: 0;
+  display: block !important;
+}
+.game-events {
+  position: absolute;
+  width: 960px;
+  height: 540px;
+  top: 0;
+  left: 0;
+}
+.game-events.my-hide {
+  top: 540px;
+}
+/*# sourceMappingURL=app.css.map */

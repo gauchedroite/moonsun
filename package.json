@@ -1,0 +1,15 @@
+{
+  "name": "moonsun",
+  "version": "0.0.0",
+  "description": "moonsun",
+  "author": "Christian Trépanier",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gauchedroite/moonsun.git"
+  },
+  "devDependencies": {
+    "less": "^2.2.0",
+    "less-plugin-autoprefix": "^1.1.0"
+  }
+}

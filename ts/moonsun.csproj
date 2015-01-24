@@ -18,11 +18,50 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="public\assets\app.css">
+      <DependentUpon>app.less</DependentUpon>
+    </Content>
     <Content Include="public\index.html" />
     <Content Include="public\webpack.config.js" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="app-ref.ts" />
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="curious\Anim.ts" />
+    <TypeScriptCompile Include="curious\Game.ts" />
+    <TypeScriptCompile Include="curious\GameData.ts" />
+    <TypeScriptCompile Include="curious\IAnim.ts" />
+    <TypeScriptCompile Include="curious\IDescOptions.ts" />
+    <TypeScriptCompile Include="curious\IGame.ts" />
+    <TypeScriptCompile Include="curious\ILevel.ts" />
+    <TypeScriptCompile Include="curious\IPlayable.ts" />
+    <TypeScriptCompile Include="curious\IPlayableAnim.ts" />
+    <TypeScriptCompile Include="curious\IPlayableQuestion.ts" />
+    <TypeScriptCompile Include="curious\IQuestion.ts" />
+    <TypeScriptCompile Include="curious\IRunner.ts" />
+    <TypeScriptCompile Include="curious\IWhen.ts" />
+    <TypeScriptCompile Include="curious\IWhenDone.ts" />
+    <TypeScriptCompile Include="curious\Question.ts" />
+    <TypeScriptCompile Include="curious\Utils.ts" />
+    <TypeScriptCompile Include="curious\WhenDone.ts" />
+    <TypeScriptCompile Include="game\app.actions.ts" />
+    <TypeScriptCompile Include="game\app.component.ts" />
+    <TypeScriptCompile Include="game\cinema.component.ts" />
+    <TypeScriptCompile Include="game\cinema.store.ts" />
+    <TypeScriptCompile Include="game\clicker.component.ts" />
+    <TypeScriptCompile Include="game\description.component.ts" />
+    <TypeScriptCompile Include="game\description.store.ts" />
+    <TypeScriptCompile Include="game\detail.component.ts" />
+    <TypeScriptCompile Include="game\detail.store.ts" />
+    <TypeScriptCompile Include="game\app.dispatcher.ts" />
+    <TypeScriptCompile Include="game\app.store.ts" />
+    <TypeScriptCompile Include="game\app.payload.ts" />
+    <TypeScriptCompile Include="game\runner.options.ts" />
+    <TypeScriptCompile Include="game\title.component.ts" />
+    <TypeScriptCompile Include="helpers\GameConstants.ts" />
+    <TypeScriptCompile Include="helpers\GameInit.ts" />
+    <TypeScriptCompile Include="helpers\TypedModel.ts" />
+    <TypeScriptCompile Include="assets\level-001-intro.ts" />
     <TypeScriptCompile Include="typings\tsd.d.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -37,6 +76,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="tsd.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="public\assets\app.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="public\assets\app.css.map">
+      <DependentUpon>app.css</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="public\assets\level_001\img\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>

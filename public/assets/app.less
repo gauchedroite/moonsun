@@ -1,0 +1,189 @@
+﻿
+@width: 960px;
+@height: 540px;
+@bordercolor: gray;
+@outlinecolor: #333;
+@outlinewidth: 2px;
+@outlineblur: 4px;
+@bluemoon: #23b0ff;
+@headwidth: 270px;
+
+.hide() {
+    transition: opacity 0.15s;
+    opacity: 0;
+}
+
+.wkit() {
+    //The following helps make the div "more 2D" with Chrome/Safari
+    -webkit-backface-visibility: hidden;
+    -webkit-transform: translateZ(0) scale(1.0, 1.0);
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color: white;
+}
+
+.preload * {
+    transition: none !important;
+}
+
+img {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+*:focus {
+    outline: none;
+}
+
+.game-wrapper {
+    position: absolute;
+    overflow: hidden;
+}
+
+.layer {
+    // Position:absolute elements are removed from the document flow and can overlap.
+    // The closest *positioned* ancestor acts as the parent. If none, it's <html>.
+    // Position:absolute also sets display:block.
+    position: absolute;
+    overflow: hidden;
+    width: @width;
+    height: @height;
+    .wkit();
+}
+
+.game {
+    background-color: #111;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.cinema {
+    position: absolute;
+    width: @width;
+    height: @height;
+    transition: opacity 0.75s;
+
+    &.my-hide {
+        transition: opacity 0.25s;
+        opacity: 0;
+    }
+}
+
+.cinema-wait {
+    position: absolute;
+    top: 20px;
+    width: @width;
+    text-align: center;
+    transition: opacity 0.75s ease 1.5s;
+
+    &.my-hide {
+        .hide();
+    }
+
+    div {
+        display: inline-block;
+        background-color: gray;
+        padding: 8px 16px;
+        font-family: 'Open Sans', sans-serif;
+        font-size: x-large;
+    }
+}
+
+.description {
+    position: absolute;
+    top: 0;
+    width: @width;
+    .wkit();
+    transition: opacity 0.25s;
+
+    &.my-hide {
+        .hide();
+    }
+
+    div.description-text-default {
+        display: inline-block;
+        margin: 23px 30px 0 30px;
+        border: 5px solid @bordercolor;
+        padding: 10px 15px;
+        font-size: 30px;
+        background-color: rgba(255, 255, 255, 0.9);
+        color: black;
+        //background-color: rgba(0, 0, 0, 0.75);
+        //color: #fff;
+    }
+}
+
+.pop {
+    position: absolute;
+    top: 200px;
+    width: @width;
+    transform: translateY(-50px);
+    transition: all 3s;
+    animation: pop-fadeout 3s ease forwards;
+
+    &.my-hide {
+        opacity: 0;
+        transform: translateY(0);
+        transition: opacity 0s;
+        animation: 0s none;
+    }
+
+    div {
+        text-shadow: @outlinewidth @outlinewidth @outlineblur @outlinecolor, -@outlinewidth -@outlinewidth @outlineblur @outlinecolor, @outlinewidth -@outlinewidth @outlineblur @outlinecolor, -@outlinewidth @outlinewidth @outlineblur @outlinecolor, 0 @outlinewidth @outlineblur @outlinecolor, @outlinewidth 0 @outlineblur @outlinecolor, 0 -@outlinewidth @outlineblur @outlinecolor, -@outlinewidth 0 @outlineblur @outlinecolor;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size: 54px;
+        color: rgba(255, 255, 247, 0.9);
+        text-align: center;
+    }
+}
+
+@keyframes pop-fadeout {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.main {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: black;
+    .wkit();
+}
+
+.title {
+    width: @width;
+    height: 32px;
+    text-align: right;
+    border-bottom: 10px solid @bluemoon;
+
+    div {
+        text-shadow: @outlinewidth @outlinewidth @outlineblur @outlinecolor, -@outlinewidth -@outlinewidth @outlineblur @outlinecolor, @outlinewidth -@outlinewidth @outlineblur @outlinecolor, -@outlinewidth @outlinewidth @outlineblur @outlinecolor, 0 @outlinewidth @outlineblur @outlinecolor, @outlinewidth 0 @outlineblur @outlinecolor, 0 -@outlinewidth @outlineblur @outlinecolor, -@outlinewidth 0 @outlineblur @outlinecolor;
+        font-family: Impact,  Haettenschweiler,  'Arial Narrow Bold',  sans-serif;
+        font-size: 27px;
+        color: #eee;
+        padding-right: 8px;
+        transition: opacity 2s ease 1.5s;
+
+        &.my-hide {
+            .hide();
+            display: block !important;
+        }
+    }
+}
+
+.game-events {
+    position: absolute;
+    width: @width;
+    height: @height;
+    top: 0;
+    left: 0;
+
+    &.my-hide {
+        top: @height;
+    }
+}

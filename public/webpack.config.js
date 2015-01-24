@@ -8,7 +8,7 @@ var options = {
   cache: true,
   entry: {
     app: ['./app'],
-    vendors: ['flux', 'typed-react', 'backbone', 'react']
+    vendors: ['flux', 'typed-react', 'backbone', 'react/addons', 'react']
   },
   output: {
     path: './build',
@@ -16,7 +16,12 @@ var options = {
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
-  ]
+  ],
+  module: {
+    loaders: [
+      { test: /\.css$/, loaders: ["style-loader", "css-loader" /*doesn't work:"autoprefixer-loader?browsers=last 2 version"*/] }
+    ]
+  }
 };
 
 
