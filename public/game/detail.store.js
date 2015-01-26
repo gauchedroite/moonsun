@@ -4,18 +4,33 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var TypedModel = require("../helpers/TypedModel");
+var dispatcher = require("./app.dispatcher");
+var Payload = require("./app.payload");
+var AppEventEmitter = require("./app.eventemitter");
+var ActionTypes = Payload.ActionTypes;
 var DetailStore = (function (_super) {
     __extends(DetailStore, _super);
     function DetailStore() {
-        _super.apply(this, arguments);
+        _super.call(this);
+        this.text = "";
+        this.hide = true;
+        this.initialize();
     }
-    DetailStore.prototype.defaults = function () {
-        return {
-            text: "",
-            hide: true
-        };
+    DetailStore.prototype.initialize = function () {
+        var _this = this;
+        this.dispatchToken = dispatcher.register(function (payload) {
+            var action = payload.action;
+            switch (action.type) {
+                case ActionTypes.SHOW_DESCRIPTION:
+                    var data = action.data;
+                    _this.text = data.text;
+                    _this.hide = false;
+                    _this.emitChange();
+                    break;
+            }
+            ;
+        });
     };
     return DetailStore;
-})(TypedModel);
+})(AppEventEmitter);
 module.exports = DetailStore;

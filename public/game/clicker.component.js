@@ -6,14 +6,14 @@ var __extends = this.__extends || function (d, b) {
 };
 var React = require("react/addons");
 var TypedReact = require("typed-react");
-var Actions = require("./app.actions");
+var ActionCreators = require("./app.actioncreators");
 ;
 var ClickerSpec = (function (_super) {
     __extends(ClickerSpec, _super);
     function ClickerSpec() {
         _super.apply(this, arguments);
         this._handleOnClick = function () {
-            Actions.clicked();
+            ActionCreators.clicked();
         };
     }
     ClickerSpec.prototype.render = function () {

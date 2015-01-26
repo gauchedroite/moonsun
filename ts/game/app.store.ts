@@ -1,13 +1,15 @@
 ﻿
 import TypedReact = require("typed-react");
-import TypedModel = require("../helpers/TypedModel");
 import IRunner = require("../curious/IRunner");
 import Payload = require("./app.payload");
 import dispatcher = require("./app.dispatcher");
 import CinemaStore = require("./cinema.store");
 import DescriptionStore = require("./description.store");
 import IDescOptions = require("../curious/IDescOptions");
+import ActionCreators = require("./app.actioncreators");
+import AppEventEmitter = require("./app.eventemitter");
 
+var ActionTypes = Payload.ActionTypes;
 
 //
 // Local variables
@@ -17,31 +19,26 @@ var description = new DescriptionStore();
 
 
 //
-// Store data shape (Backbone attributes)
+// Store data shape
 //
 interface IApp {
     hideClicker: boolean;
 }
 
-class Store extends TypedModel<IApp> implements IApp, IRunner {
+class Store extends AppEventEmitter implements IApp, IRunner {
     //
     // Could be saved in localStorage instead
     //
     constructor() {
         super();
         (<any>window).appStore = this;
+        this.initialize();
     }
 
     //
-    // Store data (Backbone attributes)
+    // Store data
     //
-    public hideClicker: boolean;
-
-    public defaults(): IApp {
-        return {
-            hideClicker: false
-        };
-    }
+    public hideClicker: boolean = false;
 
     //
     // Static methods for components to get access to (static) data
@@ -62,17 +59,18 @@ class Store extends TypedModel<IApp> implements IApp, IRunner {
     showAnim = (text: string, url: string, nextEvent: () => void, immediate?: boolean): void => {
         //cinema.text = text;
         //cinema.url = url;
-        cinema.set({ text: text, url: url });
-        this.animEvent = nextEvent;
+        //this.animEvent = nextEvent;
+        ActionCreators.showAnim(text, url, nextEvent);
     }
 
     showDescription = (text: string, nextEvent: () => void, options?: IDescOptions): void => {
         //description.text = text;
         //description.hide = false;
-        description.set({ text: text, hide: false });
+        ActionCreators.showDescription(text, nextEvent);
+        //description.set({ text: text, hide: false });
 
         this.animEvent = () => {
-            description.hide = true;
+            ActionCreators.hideDescription();
             setTimeout(nextEvent, 150);
         };
     }
@@ -107,13 +105,19 @@ class Store extends TypedModel<IApp> implements IApp, IRunner {
     // Dispatch action listeners
     //
     dispatchToken: string;
-    initialize(attributes?: any, options?: any) {
+    initialize() {
         this.dispatchToken = dispatcher.register((payload: Payload.IPayload) => {
-            switch (payload.actionName) {
-                case Payload.Action.CLICK:
-                    //We could be changing some store properties that would then trigger Backbone "change" events
-                    //setTimeout(this.animEvent, 1);
-                    this.animEvent();
+            var action = payload.action;
+
+            switch (action.type) {
+                case ActionTypes.CLICK:
+                    setTimeout(this.animEvent, 0);
+                    break;
+
+                case ActionTypes.SHOW_ANIM:
+                case ActionTypes.SHOW_DESCRIPTION:
+                    var data = action.data;
+                    this.animEvent = data.nextEvent;
                     break;
             };
         });

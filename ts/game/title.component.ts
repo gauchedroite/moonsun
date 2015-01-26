@@ -26,10 +26,10 @@ class TitleSpec extends TypedReact.Component<ICinemaProps, ITitleState> {
     }
 
     componentDidMount() {
-        this.props.store.addChangeListener(this._onChange, this);
+        this.props.store.addChangeListener(this._onChange);
     }
     componentWillUnmount() {
-        this.props.store.removeAllListeners(this);
+        this.props.store.removeAllListeners();
     }
 
     render() {
@@ -39,12 +39,12 @@ class TitleSpec extends TypedReact.Component<ICinemaProps, ITitleState> {
     }
 
 
-    private _onChange(model, options) {
+    private _onChange() {
         this.setState({
             hide: true
         });
         //FIXME: should wait for the animation to complete instead of a fixed 250ms
-        setTimeout(() => { this.setState({ hide: false, text: model.text }) }, 250);
+        setTimeout(() => { this.setState({ hide: false, text: this.props.store.text }) }, 250);
     }
 }
 

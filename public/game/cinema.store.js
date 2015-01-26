@@ -4,35 +4,34 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var TypedModel = require("../helpers/TypedModel");
 var dispatcher = require("./app.dispatcher");
 var Payload = require("./app.payload");
+var AppEventEmitter = require("./app.eventemitter");
+var ActionTypes = Payload.ActionTypes;
 var CinemaStore = (function (_super) {
     __extends(CinemaStore, _super);
     function CinemaStore() {
-        var _this = this;
-        _super.apply(this, arguments);
-        this.addChangeListener = function (callback, context) {
-            _this.on("change", function (model, options) {
-                callback(model, options);
-            }, context);
-        };
-        this.removeAllListeners = function (context) {
-            _this.off(null, null, context);
-        };
+        _super.call(this);
+        this.text = "";
+        this.url = "pleeeeeze wait!";
+        this.wait = "";
+        this.initialize();
     }
-    CinemaStore.prototype.defaults = function () {
-        return { text: "", wait: "pleeeeeze wait!", url: "" };
-    };
-    CinemaStore.prototype.initialize = function (attributes, options) {
+    CinemaStore.prototype.initialize = function () {
+        var _this = this;
         this.dispatchToken = dispatcher.register(function (payload) {
-            switch (payload.actionName) {
-                case Payload.Action.CINEMA_LOADED:
+            var action = payload.action;
+            switch (action.type) {
+                case ActionTypes.SHOW_ANIM:
+                    var data = action.data;
+                    _this.text = data.text;
+                    _this.url = data.url;
+                    _this.emitChange();
                     break;
             }
             ;
         });
     };
     return CinemaStore;
-})(TypedModel);
+})(AppEventEmitter);
 module.exports = CinemaStore;

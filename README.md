@@ -1,6 +1,6 @@
 moonsun
 ===
-Interactive adventure game implemented with **Flux/React**, **Backbone** and **TypeScript**. Uses **webpack** to package the application.
+Interactive adventure game implemented with **Flux/React** and **TypeScript**. Uses **webpack** to package the application.
 
 There are three related projects here: the Node **[server](server)**, the **[public](public)** files for the game and **[ts](ts)** for the actual TypeScript sources.
 The rationale for having an additional **ts** project instead of using **public** for all the sources is because of the (lack of) support of TypeScript in webpack loaders.

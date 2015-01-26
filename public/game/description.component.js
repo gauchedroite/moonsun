@@ -13,10 +13,10 @@ var DescriptionSpec = (function (_super) {
         _super.apply(this, arguments);
     }
     DescriptionSpec.prototype.componentDidMount = function () {
-        this.props.store.addChangeListener(this._onChange, this);
+        this.props.store.addChangeListener(this._onChange);
     };
     DescriptionSpec.prototype.componentWillUnmount = function () {
-        this.props.store.removeAllListeners(this);
+        this.props.store.removeAllListeners();
     };
     DescriptionSpec.prototype.render = function () {
         var cx = React.addons.classSet({

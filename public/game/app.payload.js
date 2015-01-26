@@ -1,9 +1,19 @@
-var Action = (function () {
-    function Action() {
+var PayloadSources = (function () {
+    function PayloadSources() {
     }
-    Action.CLICK = "CLICK";
-    Action.CHANGE_CINEMA = "CHANGE_CINEMA";
-    Action.CINEMA_LOADED = "CINEMA_LOADED";
-    return Action;
+    PayloadSources.VIEW_ACTION = "VIEW_ACTION";
+    PayloadSources.SERVER_ACTION = "SERVER_ACTION";
+    return PayloadSources;
 })();
-exports.Action = Action;
+exports.PayloadSources = PayloadSources;
+var ActionTypes = (function () {
+    function ActionTypes() {
+    }
+    ActionTypes.CLICK = "CLICK";
+    ActionTypes.CHANGE_CINEMA = "CHANGE_CINEMA";
+    ActionTypes.SHOW_ANIM = "SHOW_ANIM";
+    ActionTypes.SHOW_DESCRIPTION = "SHOW_DESCRIPTION";
+    ActionTypes.HIDE_DESCRIPTION = "HIDE_DESCRIPTION";
+    return ActionTypes;
+})();
+exports.ActionTypes = ActionTypes;

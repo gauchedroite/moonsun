@@ -20,21 +20,21 @@ var TitleSpec = (function (_super) {
         };
     };
     TitleSpec.prototype.componentDidMount = function () {
-        this.props.store.addChangeListener(this._onChange, this);
+        this.props.store.addChangeListener(this._onChange);
     };
     TitleSpec.prototype.componentWillUnmount = function () {
-        this.props.store.removeAllListeners(this);
+        this.props.store.removeAllListeners();
     };
     TitleSpec.prototype.render = function () {
         return React.createElement("div", { className: "title" }, React.createElement("div", { className: (this.state.hide ? "my-hide" : "") }, this.state.text));
     };
-    TitleSpec.prototype._onChange = function (model, options) {
+    TitleSpec.prototype._onChange = function () {
         var _this = this;
         this.setState({
             hide: true
         });
         setTimeout(function () {
-            _this.setState({ hide: false, text: model.text });
+            _this.setState({ hide: false, text: _this.props.store.text });
         }, 250);
     };
     return TitleSpec;

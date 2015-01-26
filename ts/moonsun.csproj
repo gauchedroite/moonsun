@@ -44,8 +44,9 @@
     <TypeScriptCompile Include="curious\Question.ts" />
     <TypeScriptCompile Include="curious\Utils.ts" />
     <TypeScriptCompile Include="curious\WhenDone.ts" />
-    <TypeScriptCompile Include="game\app.actions.ts" />
+    <TypeScriptCompile Include="game\app.actioncreators.ts" />
     <TypeScriptCompile Include="game\app.component.ts" />
+    <TypeScriptCompile Include="game\app.eventemitter.ts" />
     <TypeScriptCompile Include="game\cinema.component.ts" />
     <TypeScriptCompile Include="game\cinema.store.ts" />
     <TypeScriptCompile Include="game\clicker.component.ts" />
@@ -58,6 +59,7 @@
     <TypeScriptCompile Include="game\app.payload.ts" />
     <TypeScriptCompile Include="game\runner.options.ts" />
     <TypeScriptCompile Include="game\title.component.ts" />
+    <TypeScriptCompile Include="helpers\EventEmitter.ts" />
     <TypeScriptCompile Include="helpers\GameConstants.ts" />
     <TypeScriptCompile Include="helpers\GameInit.ts" />
     <TypeScriptCompile Include="helpers\TypedModel.ts" />

@@ -1,7 +1,7 @@
 ﻿
 import React = require("react/addons");
 import TypedReact = require("typed-react");
-import Actions = require("./app.actions");
+import ActionCreators = require("./app.actioncreators");
 import Store = require("./app.store");
 
 
@@ -18,7 +18,7 @@ class ClickerSpec extends TypedReact.Component<IClickerProps, any>
     }
 
     private _handleOnClick = () => {
-        Actions.clicked();
+        ActionCreators.clicked();
     }
 }
 

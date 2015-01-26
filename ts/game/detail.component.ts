@@ -10,10 +10,10 @@ interface IDetailProps {
 
 class DetailSpec extends TypedReact.Component<IDetailProps, any> {
     componentDidMount() {
-        this.props.store.addChangeListener(this._onChange, this);
+        this.props.store.addChangeListener(this._onChange);
     }
     componentWillUnmount() {
-        this.props.store.removeAllListeners(this);
+        this.props.store.removeAllListeners();
     }
 
     //

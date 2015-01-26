@@ -1,7 +1,6 @@
 ﻿
 import React = require("react/addons");
 import TypedReact = require("typed-react");
-import TypedModel = require("../helpers/TypedModel");
 //
 import AppStore = require("./app.store");
 import CinemaStore = require("./cinema.store");
@@ -44,7 +43,6 @@ class AppSpec extends TypedReact.Component<any, IAppState> {
             React.createElement(cinema, { store: this.state.cinema }),
             React.createElement(description, { store: this.state.description }),
             React.createElement("div", { className: "main" },
-                React.createElement(title, { store: this.state.cinema }),
                 React.createElement(title, { store: this.state.cinema })
                 ),
             React.createElement(clicker, { store: this.state.app })

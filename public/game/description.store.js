@@ -4,27 +4,44 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var TypedModel = require("../helpers/TypedModel");
+var dispatcher = require("./app.dispatcher");
+var Payload = require("./app.payload");
+var EventEmitter = require("../helpers/EventEmitter");
+var ActionTypes = Payload.ActionTypes;
+var CHANGE_EVENT = "change";
 var DescriptionStore = (function (_super) {
     __extends(DescriptionStore, _super);
     function DescriptionStore() {
-        var _this = this;
-        _super.apply(this, arguments);
-        this.addChangeListener = function (callback, context) {
-            _this.on("change", function (model, options) {
-                callback(model, options);
-            }, context);
+        _super.call(this);
+        this.text = "";
+        this.hide = true;
+        this.emitChange = function () {
+            this.emit(CHANGE_EVENT);
         };
-        this.removeAllListeners = function (context) {
-            _this.off(null, null, context);
+        this.addChangeListener = function (callback) {
+            this.on(CHANGE_EVENT, callback);
         };
+        this.initialize();
     }
-    DescriptionStore.prototype.defaults = function () {
-        return {
-            text: "",
-            hide: true
-        };
+    DescriptionStore.prototype.initialize = function () {
+        var _this = this;
+        this.dispatchToken = dispatcher.register(function (payload) {
+            var action = payload.action;
+            switch (action.type) {
+                case ActionTypes.SHOW_DESCRIPTION:
+                    var data = action.data;
+                    _this.text = data.text;
+                    _this.hide = false;
+                    _this.emitChange();
+                    break;
+                case ActionTypes.HIDE_DESCRIPTION:
+                    _this.hide = true;
+                    _this.emitChange();
+                    break;
+            }
+            ;
+        });
     };
     return DescriptionStore;
-})(TypedModel);
+})(EventEmitter);
 module.exports = DescriptionStore;

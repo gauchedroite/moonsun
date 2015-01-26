@@ -1,6 +1,6 @@
 var game = require("./GameConstants");
 var GameInit = (function () {
-    function GameInit(gameWrapperId, preloadClass) {
+    function GameInit(gameWrapperId) {
         var vendorIndex = 0;
         if (window.webkitRequestAnimationFrame)
             vendorIndex = 1;
@@ -45,7 +45,6 @@ var GameInit = (function () {
         }, 1);
         resize();
         window.addEventListener("resize", resize.bind(this), false);
-        document.body.classList.remove(preloadClass);
     }
     return GameInit;
 })();

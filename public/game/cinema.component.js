@@ -28,10 +28,10 @@ var CinemaSpec = (function (_super) {
         };
     };
     CinemaSpec.prototype.componentDidMount = function () {
-        this.props.store.addChangeListener(this._onChange, this);
+        this.props.store.addChangeListener(this._onChange);
     };
     CinemaSpec.prototype.componentWillUnmount = function () {
-        this.props.store.removeAllListeners(this);
+        this.props.store.removeAllListeners();
     };
     CinemaSpec.prototype.render = function () {
         var cxCinema = React.addons.classSet({
@@ -44,14 +44,14 @@ var CinemaSpec = (function (_super) {
         });
         return React.createElement("div", null, React.createElement("div", { className: cxCinema }, React.createElement("img", { width: "960", height: "540", src: this.state.url, onLoad: this._onLoad })), React.createElement("div", { className: cxWait }, React.createElement("div", null, this.props.store.wait)));
     };
-    CinemaSpec.prototype._onChange = function (model, options) {
+    CinemaSpec.prototype._onChange = function () {
         var _this = this;
         this.setState({
             hideCinema: true,
             hideWait: false
         });
         setTimeout(function () {
-            _this.setState({ url: model.url });
+            _this.setState({ url: _this.props.store.url });
         }, 250);
     };
     return CinemaSpec;

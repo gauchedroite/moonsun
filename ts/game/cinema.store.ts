@@ -1,12 +1,15 @@
 ﻿
 import TypedReact = require("typed-react");
-import TypedModel = require("../helpers/TypedModel");
 import dispatcher = require("./app.dispatcher");
 import Payload = require("./app.payload");
+import AppEventEmitter = require("./app.eventemitter");
+import ActionCreators = require("./app.actioncreators");
+
+var ActionTypes = Payload.ActionTypes;
 
 
 //
-// Store shape (Backbone attributes)
+// Store shape
 //
 interface ICinema {
     text: string;
@@ -14,39 +17,36 @@ interface ICinema {
     wait: string;
 }
 
-class CinemaStore extends TypedModel<ICinema> implements ICinema {
+class CinemaStore extends AppEventEmitter implements ICinema {
     //
-    // Store data (Backbone attributes)
+    // Store data
     //
-    public text: string;
-    public url: string;
-    public wait: string;
-    public defaults(): ICinema {
-        return { text: "", wait: "pleeeeeze wait!", url: "" };
+    public text: string = "";
+    public url: string = "pleeeeeze wait!";
+    public wait: string = "";
+
+    constructor() {
+        super();
+        this.initialize();
     }
 
     //
     // Dispatch action listeners
     //
     dispatchToken: string;
-    initialize(attributes?: any, options?: any) {
+    initialize() {
         this.dispatchToken = dispatcher.register((payload: Payload.IPayload) => {
-            switch (payload.actionName) {
-                case Payload.Action.CINEMA_LOADED:
-                    //We could be changing some store properties that would then trigger Backbone "change" events
+            var action = payload.action;
+
+            switch (action.type) {
+                case ActionTypes.SHOW_ANIM:
+                    var data = action.data;
+                    this.text = data.text;
+                    this.url = data.url;
+                    this.emitChange();
                     break;
             };
         });
-    }
-
-    //
-    // Public methods
-    //
-    addChangeListener = (callback, context?) => {
-        this.on("change", (model, options) => { callback(model, options); }, context);
-    }
-    removeAllListeners = (context?) => {
-        this.off(null, null, context);
     }
 }
 

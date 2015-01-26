@@ -28,7 +28,7 @@ var AppSpec = (function (_super) {
         return getStateFromStores();
     };
     AppSpec.prototype.render = function () {
-        return React.createElement("div", { className: "game layer", tabIndex: "1", style: { zIndex: "1" } }, React.createElement(cinema, { store: this.state.cinema }), React.createElement(description, { store: this.state.description }), React.createElement("div", { className: "main" }, React.createElement(title, { store: this.state.cinema }), React.createElement(title, { store: this.state.cinema })), React.createElement(clicker, { store: this.state.app }));
+        return React.createElement("div", { className: "game layer", tabIndex: "1", style: { zIndex: "1" } }, React.createElement(cinema, { store: this.state.cinema }), React.createElement(description, { store: this.state.description }), React.createElement("div", { className: "main" }, React.createElement(title, { store: this.state.cinema })), React.createElement(clicker, { store: this.state.app }));
     };
     return AppSpec;
 })(TypedReact.Component);

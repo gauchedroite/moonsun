@@ -13,10 +13,10 @@ var DetailSpec = (function (_super) {
         _super.apply(this, arguments);
     }
     DetailSpec.prototype.componentDidMount = function () {
-        this.props.store.addChangeListener(this._onChange, this);
+        this.props.store.addChangeListener(this._onChange);
     };
     DetailSpec.prototype.componentWillUnmount = function () {
-        this.props.store.removeAllListeners(this);
+        this.props.store.removeAllListeners();
     };
     DetailSpec.prototype.render = function () {
         var cx = React.addons.classSet({

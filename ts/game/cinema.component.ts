@@ -36,10 +36,10 @@ class CinemaSpec extends TypedReact.Component<ICinemaProps, ICinemaState> {
     // Listen to change events from the store
     //
     componentDidMount() {
-        this.props.store.addChangeListener(this._onChange, this);
+        this.props.store.addChangeListener(this._onChange);
     }
     componentWillUnmount() {
-        this.props.store.removeAllListeners(this);
+        this.props.store.removeAllListeners();
     }
 
     //
@@ -74,13 +74,13 @@ class CinemaSpec extends TypedReact.Component<ICinemaProps, ICinemaState> {
         });
     }
 
-    private _onChange(model, options) {
+    private _onChange() {
         this.setState({
             hideCinema: true,
             hideWait: false
         });
         //FIXME: should wait for the animation to complete instead of a fixed 250ms
-        setTimeout(() => { this.setState({ url: model.url }) }, 250);
+        setTimeout(() => { this.setState({ url: this.props.store.url }) }, 250);
     }
 }
 
