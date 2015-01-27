@@ -6,9 +6,9 @@ var __extends = this.__extends || function (d, b) {
 };
 var EventEmitter = require("../helpers/EventEmitter");
 var CHANGE_EVENT = "change";
-var AppEventEmitter = (function (_super) {
-    __extends(AppEventEmitter, _super);
-    function AppEventEmitter() {
+var BaseStore = (function (_super) {
+    __extends(BaseStore, _super);
+    function BaseStore() {
         _super.apply(this, arguments);
         this.emitChange = function () {
             this.emit(CHANGE_EVENT);
@@ -17,6 +17,6 @@ var AppEventEmitter = (function (_super) {
             this.on(CHANGE_EVENT, callback);
         };
     }
-    return AppEventEmitter;
+    return BaseStore;
 })(EventEmitter);
-module.exports = AppEventEmitter;
+module.exports = BaseStore;

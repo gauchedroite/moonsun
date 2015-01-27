@@ -8,7 +8,7 @@ var options = {
   cache: true,
   entry: {
     app: ['./app'],
-    vendors: ['flux', 'typed-react', 'backbone', 'react/addons', 'react']
+    vendors: ['flux', 'typed-react', 'react/addons', 'react']
   },
   output: {
     path: './build',

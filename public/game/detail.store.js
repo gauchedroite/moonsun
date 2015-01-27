@@ -6,18 +6,15 @@ var __extends = this.__extends || function (d, b) {
 };
 var dispatcher = require("./app.dispatcher");
 var Payload = require("./app.payload");
-var AppEventEmitter = require("./app.eventemitter");
+var BaseStore = require("./base.store");
 var ActionTypes = Payload.ActionTypes;
 var DetailStore = (function (_super) {
     __extends(DetailStore, _super);
     function DetailStore() {
+        var _this = this;
         _super.call(this);
         this.text = "";
         this.hide = true;
-        this.initialize();
-    }
-    DetailStore.prototype.initialize = function () {
-        var _this = this;
         this.dispatchToken = dispatcher.register(function (payload) {
             var action = payload.action;
             switch (action.type) {
@@ -30,7 +27,7 @@ var DetailStore = (function (_super) {
             }
             ;
         });
-    };
+    }
     return DetailStore;
-})(AppEventEmitter);
+})(BaseStore);
 module.exports = DetailStore;

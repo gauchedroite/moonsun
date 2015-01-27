@@ -9,7 +9,7 @@ var dispatcher = require("./app.dispatcher");
 var CinemaStore = require("./cinema.store");
 var DescriptionStore = require("./description.store");
 var ActionCreators = require("./app.actioncreators");
-var AppEventEmitter = require("./app.eventemitter");
+var BaseStore = require("./base.store");
 var ActionTypes = Payload.ActionTypes;
 var cinema = new CinemaStore();
 var description = new DescriptionStore();
@@ -46,10 +46,6 @@ var Store = (function (_super) {
         this.preload = function (assets) {
         };
         window.appStore = this;
-        this.initialize();
-    }
-    Store.prototype.initialize = function () {
-        var _this = this;
         this.dispatchToken = dispatcher.register(function (payload) {
             var action = payload.action;
             switch (action.type) {
@@ -64,7 +60,7 @@ var Store = (function (_super) {
             }
             ;
         });
-    };
+    }
     Store.getApp = function () {
         return window.appStore;
     };
@@ -75,5 +71,5 @@ var Store = (function (_super) {
         return description;
     };
     return Store;
-})(AppEventEmitter);
+})(BaseStore);
 module.exports = Store;

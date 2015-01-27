@@ -7,7 +7,7 @@ import CinemaStore = require("./cinema.store");
 import DescriptionStore = require("./description.store");
 import IDescOptions = require("../curious/IDescOptions");
 import ActionCreators = require("./app.actioncreators");
-import AppEventEmitter = require("./app.eventemitter");
+import BaseStore = require("./base.store");
 
 var ActionTypes = Payload.ActionTypes;
 
@@ -18,27 +18,16 @@ var cinema = new CinemaStore();
 var description = new DescriptionStore();
 
 
-//
-// Store data shape
-//
-interface IApp {
-    hideClicker: boolean;
-}
-
-class Store extends AppEventEmitter implements IApp, IRunner {
-    //
-    // Could be saved in localStorage instead
-    //
-    constructor() {
-        super();
-        (<any>window).appStore = this;
-        this.initialize();
-    }
-
+class Store extends BaseStore implements IRunner {
     //
     // Store data
     //
     public hideClicker: boolean = false;
+
+    //
+    // Private variables and methods
+    //
+    private animEvent: () => void;
 
     //
     // Static methods for components to get access to (static) data
@@ -46,6 +35,30 @@ class Store extends AppEventEmitter implements IApp, IRunner {
     static getApp = () => { return (<any>window).appStore; }
     static getCinema = () => { return cinema; }
     static getDescription = () => { return description; }
+
+    //
+    // Could be saved in localStorage instead
+    //
+    constructor() {
+        super();
+        (<any>window).appStore = this;
+
+        this.dispatchToken = dispatcher.register((payload: Payload.IPayload) => {
+            var action = payload.action;
+
+            switch (action.type) {
+                case ActionTypes.CLICK:
+                    setTimeout(this.animEvent, 0);
+                    break;
+
+                case ActionTypes.SHOW_ANIM:
+                case ActionTypes.SHOW_DESCRIPTION:
+                    var data = action.data;
+                    this.animEvent = data.nextEvent;
+                    break;
+            };
+        });
+    }
 
     //#region IRunner
 
@@ -100,33 +113,6 @@ class Store extends AppEventEmitter implements IApp, IRunner {
     preload = (assets: Array<string>): void => { };
 
     //#endregion
-
-    //
-    // Dispatch action listeners
-    //
-    dispatchToken: string;
-    initialize() {
-        this.dispatchToken = dispatcher.register((payload: Payload.IPayload) => {
-            var action = payload.action;
-
-            switch (action.type) {
-                case ActionTypes.CLICK:
-                    setTimeout(this.animEvent, 0);
-                    break;
-
-                case ActionTypes.SHOW_ANIM:
-                case ActionTypes.SHOW_DESCRIPTION:
-                    var data = action.data;
-                    this.animEvent = data.nextEvent;
-                    break;
-            };
-        });
-    }
-
-    //
-    // Private variables and methods
-    //
-    private animEvent: () => void;
 }
 
 export = Store;

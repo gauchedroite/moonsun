@@ -25,7 +25,6 @@
     <Content Include="public\webpack.config.js" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="app-ref.ts" />
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="curious\Anim.ts" />
     <TypeScriptCompile Include="curious\Game.ts" />
@@ -46,7 +45,7 @@
     <TypeScriptCompile Include="curious\WhenDone.ts" />
     <TypeScriptCompile Include="game\app.actioncreators.ts" />
     <TypeScriptCompile Include="game\app.component.ts" />
-    <TypeScriptCompile Include="game\app.eventemitter.ts" />
+    <TypeScriptCompile Include="game\base.store.ts" />
     <TypeScriptCompile Include="game\cinema.component.ts" />
     <TypeScriptCompile Include="game\cinema.store.ts" />
     <TypeScriptCompile Include="game\clicker.component.ts" />

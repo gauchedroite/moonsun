@@ -2,22 +2,13 @@
 import TypedReact = require("typed-react");
 import dispatcher = require("./app.dispatcher");
 import Payload = require("./app.payload");
-import AppEventEmitter = require("./app.eventemitter");
+import BaseStore = require("./base.store");
 import ActionCreators = require("./app.actioncreators");
 
 var ActionTypes = Payload.ActionTypes;
 
 
-//
-// Store shape
-//
-interface ICinema {
-    text: string;
-    url: string;
-    wait: string;
-}
-
-class CinemaStore extends AppEventEmitter implements ICinema {
+class CinemaStore extends BaseStore {
     //
     // Store data
     //
@@ -27,14 +18,7 @@ class CinemaStore extends AppEventEmitter implements ICinema {
 
     constructor() {
         super();
-        this.initialize();
-    }
 
-    //
-    // Dispatch action listeners
-    //
-    dispatchToken: string;
-    initialize() {
         this.dispatchToken = dispatcher.register((payload: Payload.IPayload) => {
             var action = payload.action;
 

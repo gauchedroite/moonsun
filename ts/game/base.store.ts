@@ -4,7 +4,9 @@ import EventEmitter = require("../helpers/EventEmitter");
 
 var CHANGE_EVENT = "change";
 
-class AppEventEmitter extends EventEmitter {
+class BaseStore extends EventEmitter {
+    public dispatchToken: string;
+
     protected emitChange = function () {
         this.emit(CHANGE_EVENT);
     }
@@ -14,4 +16,4 @@ class AppEventEmitter extends EventEmitter {
     }
 }
 
-export = AppEventEmitter;
+export = BaseStore;

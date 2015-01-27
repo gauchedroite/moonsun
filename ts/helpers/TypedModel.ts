@@ -1,4 +1,10 @@
-﻿
+﻿/*
+ * This class is commented out because it's not needed right now
+ * and I want to remove the dependency on Backbone (+jQuery +underscore) for this project.
+ * 
+ * Reference: http://stackoverflow.com/questions/15298215/backbone-and-typescript-an-unhappy-marriage-building-a-type-safe-get
+ * 
+
 import Backbone = require("backbone");
 
 
@@ -33,3 +39,4 @@ class TypedModel<t> extends Backbone.Model {
 
 
 export = TypedModel;
+*/

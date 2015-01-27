@@ -6,25 +6,15 @@ var __extends = this.__extends || function (d, b) {
 };
 var dispatcher = require("./app.dispatcher");
 var Payload = require("./app.payload");
-var EventEmitter = require("../helpers/EventEmitter");
+var BaseStore = require("./base.store");
 var ActionTypes = Payload.ActionTypes;
-var CHANGE_EVENT = "change";
 var DescriptionStore = (function (_super) {
     __extends(DescriptionStore, _super);
     function DescriptionStore() {
+        var _this = this;
         _super.call(this);
         this.text = "";
         this.hide = true;
-        this.emitChange = function () {
-            this.emit(CHANGE_EVENT);
-        };
-        this.addChangeListener = function (callback) {
-            this.on(CHANGE_EVENT, callback);
-        };
-        this.initialize();
-    }
-    DescriptionStore.prototype.initialize = function () {
-        var _this = this;
         this.dispatchToken = dispatcher.register(function (payload) {
             var action = payload.action;
             switch (action.type) {
@@ -41,7 +31,7 @@ var DescriptionStore = (function (_super) {
             }
             ;
         });
-    };
+    }
     return DescriptionStore;
-})(EventEmitter);
+})(BaseStore);
 module.exports = DescriptionStore;

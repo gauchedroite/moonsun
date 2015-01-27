@@ -6,19 +6,16 @@ var __extends = this.__extends || function (d, b) {
 };
 var dispatcher = require("./app.dispatcher");
 var Payload = require("./app.payload");
-var AppEventEmitter = require("./app.eventemitter");
+var BaseStore = require("./base.store");
 var ActionTypes = Payload.ActionTypes;
 var CinemaStore = (function (_super) {
     __extends(CinemaStore, _super);
     function CinemaStore() {
+        var _this = this;
         _super.call(this);
         this.text = "";
         this.url = "pleeeeeze wait!";
         this.wait = "";
-        this.initialize();
-    }
-    CinemaStore.prototype.initialize = function () {
-        var _this = this;
         this.dispatchToken = dispatcher.register(function (payload) {
             var action = payload.action;
             switch (action.type) {
@@ -31,7 +28,7 @@ var CinemaStore = (function (_super) {
             }
             ;
         });
-    };
+    }
     return CinemaStore;
-})(AppEventEmitter);
+})(BaseStore);
 module.exports = CinemaStore;
