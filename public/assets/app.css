@@ -161,6 +161,167 @@ img {
   opacity: 0;
   display: block !important;
 }
+.detail {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.95);
+  width: 960px;
+  height: 0;
+  -webkit-transition: all 0.15s;
+          transition: all 0.15s;
+}
+.detail.ofTalk {
+  height: 200px;
+  -webkit-transition: all 0.25s;
+          transition: all 0.25s;
+}
+.detail.ofQuest {
+  -webkit-transition: all 0.25s;
+          transition: all 0.25s;
+}
+.head {
+  position: absolute;
+  width: 270px;
+  height: 270px;
+  background-repeat: no-repeat;
+  float: left;
+  background-position-x: 0;
+  -webkit-transition: all 0.4s;
+          transition: all 0.4s;
+}
+.head.my-hide {
+  background-position-x: -270px;
+  -webkit-transition: all 0.4s;
+          transition: all 0.4s;
+}
+.head div:first-child {
+  text-align: right;
+  margin: 3px 10px 0 0;
+}
+.head div:first-child div {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 35px;
+  background-color: #000;
+  color: #eee;
+  border-radius: 12px;
+  padding: 0 10px;
+  display: inline-block;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0) scale(1, 1);
+}
+.talk {
+  width: 690px;
+  height: 270px;
+  margin-left: 270px;
+}
+.talk div {
+  padding: 16px 90px 0 0;
+  font-size: 32px;
+  line-height: 28px;
+  -webkit-transition: opacity .75s;
+          transition: opacity .75s;
+}
+.talk div.my-hide {
+  opacity: 0;
+}
+.question {
+  width: 690px;
+  margin-left: 270px;
+  -webkit-transition: opacity .75s;
+          transition: opacity .75s;
+}
+.question.my-hide {
+  opacity: 0;
+}
+.question div:first-child {
+  padding: 16px 90px 0 0;
+  font-size: 32px;
+  line-height: 28px;
+}
+.question ul {
+  font-size: 32px;
+  list-style-type: none;
+  text-align: left;
+  cursor: pointer;
+  counter-reset: qno;
+  padding-left: 80px;
+}
+.question ul li {
+  margin-top: 16px;
+  margin-bottom: 32px;
+  border-bottom: 2px solid #808080;
+  counter-increment: qno;
+  -webkit-transform: scale(1);
+          transform: scale(1);
+}
+.question ul li.my-hide {
+  display: block !important;
+  opacity: 0.5;
+  -webkit-transform: scale(0.5);
+          transform: scale(0.5);
+}
+.question ul li.myQuestSelected {
+  -webkit-animation: blink 0.1s ease 4;
+          animation: blink 0.1s ease 4;
+}
+.question ul li.myQuestUnselected {
+  opacity: 0.2;
+  -webkit-transition: opacity ease 0.5s;
+          transition: opacity ease 0.5s;
+}
+.question ul li:nth-child(1) {
+  -webkit-transition: opacity 0.5s, -webkit-transform 0.5s;
+          transition: opacity 0.5s, transform 0.5s;
+}
+.question ul li:nth-child(2) {
+  -webkit-transition: opacity 0.5s 0.1s, -webkit-transform 0.5s 0.1s;
+          transition: opacity 0.5s 0.1s, transform 0.5s 0.1s;
+}
+.question ul li:nth-child(3) {
+  -webkit-transition: opacity 0.5s 0.2s, -webkit-transform 0.5s 0.2s;
+          transition: opacity 0.5s 0.2s, transform 0.5s 0.2s;
+}
+.question ul li:nth-child(4) {
+  -webkit-transition: opacity 0.5s 0.3s, -webkit-transform 0.5s 0.3s;
+          transition: opacity 0.5s 0.3s, transform 0.5s 0.3s;
+}
+.question ul li:nth-child(5) {
+  -webkit-transition: opacity 0.5s 0.4s, -webkit-transform 0.5s 0.4s;
+          transition: opacity 0.5s 0.4s, transform 0.5s 0.4s;
+}
+.progress {
+  position: absolute;
+  top: -105px;
+  left: 419px;
+  width: 122px;
+  height: 122px;
+  -webkit-transition: opacity 0.4s;
+          transition: opacity 0.4s;
+}
+.progress.my-hide {
+  opacity: 0;
+}
+@-webkit-keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 .game-events {
   position: absolute;
   width: 960px;
@@ -170,5 +331,102 @@ img {
 }
 .game-events.my-hide {
   top: 540px;
+}
+.menu.my-hide {
+  -webkit-transition: all 0.25s;
+          transition: all 0.25s;
+}
+.menu-bg {
+  position: absolute;
+  width: 960px;
+  height: 540px;
+  background: black;
+  opacity: 0.5;
+  -webkit-transition: opacity 0.25s;
+          transition: opacity 0.25s;
+}
+.menu-bg.my-hide {
+  opacity: 0;
+  -webkit-transition: opacity 0.25s;
+          transition: opacity 0.25s;
+}
+.menu-items {
+  font-family: 'Arial Black', Gadget, sans-serif;
+  font-size: 44px;
+  line-height: 40px;
+}
+.menu-circle {
+  padding: 50px;
+  border: solid 20px #23b0ff;
+  border-radius: 50%;
+  background-color: #000;
+  -webkit-transform: scale(1);
+          transform: scale(1);
+  -webkit-transition: all 0.2s;
+          transition: all 0.2s;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0) scale(1, 1);
+}
+.menu-circle.my-hide {
+  opacity: 0;
+  -webkit-transform: scale(0);
+          transform: scale(0);
+  -webkit-transition: all 0.2s;
+          transition: all 0.2s;
+}
+.menu-item-restart {
+  position: absolute;
+  top: 30px;
+  left: 100px;
+  width: 175px;
+  height: 175px;
+  background-color: #092c40;
+  color: #ff6a00;
+  display: table;
+}
+.menu-item-restart > div {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  pointer-events: none;
+}
+.menu-item-play {
+  position: absolute;
+  top: 220px;
+  left: 600px;
+  width: 150px;
+  height: 150px;
+  background-color: #092c40;
+  color: #4cff00;
+  display: table;
+}
+.menu-item-play.selected {
+  -webkit-transition: opacity 0.5s, -webkit-transform 0.5s;
+          transition: opacity 0.5s, transform 0.5s;
+  -webkit-transform: scale(6) rotate(30deg);
+          transform: scale(6) rotate(30deg);
+  opacity: 0;
+}
+.menu-item-play > div {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  pointer-events: none;
+}
+.feedback {
+  position: absolute;
+  top: 1540px;
+  width: 20px;
+  height: 20px;
+  border: 5px solid #ff0000;
+  border-radius: 50%;
+}
+.svg {
+  position: absolute;
+  left: 880px;
+  width: 960px;
+  height: 50px;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0) scale(1, 1);
 }
 /*# sourceMappingURL=app.css.map */

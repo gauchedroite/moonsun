@@ -19,16 +19,22 @@ var Spec = (function (_super) {
         this.props.store.removeAllListeners();
     };
     Spec.prototype.render = function () {
+        var divStyle = {
+            display: (this.props.store.collapse ? "none" : "")
+        };
         var cx = React.addons.classSet({
-            "description": true,
+            "talk": true,
             "my-hide": this.props.store.hide
         });
-        return React.createElement("div", { className: cx }, React.createElement("div", { className: "description-text-default" }, this.props.store.text));
+        return React.createElement("div", { className: cx, style: divStyle }, React.createElement("div", {
+            className: (this.props.store.hide ? "my-hide" : ""),
+            dangerouslySetInnerHTML: { __html: this.props.store.text }
+        }));
     };
     Spec.prototype._onChange = function () {
         this.forceUpdate();
     };
     return Spec;
 })(TypedReact.Component);
-var description = TypedReact.createClass(Spec);
-module.exports = description;
+var component = TypedReact.createClass(Spec);
+module.exports = component;

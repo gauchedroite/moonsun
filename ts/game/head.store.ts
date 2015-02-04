@@ -9,8 +9,8 @@ var ActionTypes = Payload.ActionTypes;
 
 
 class Store extends BaseStore {
-    public text: string = "";
-    public hide: boolean = true;
+    public talker: string = "";
+    public url: string = "";
 
     constructor() {
         super();
@@ -19,15 +19,10 @@ class Store extends BaseStore {
             var action = payload.action;
 
             switch (action.type) {
-                case ActionTypes.SHOW_DESCRIPTION:
+                case ActionTypes.SET_HEAD:
                     var data = action.data;
-                    this.text = data.text;
-                    this.hide = false;
-                    this.emitChange();
-                    break;
-
-                case ActionTypes.HIDE_DESCRIPTION:
-                    this.hide = true;
+                    this.talker = data.talker;
+                    this.url = data.url;
                     this.emitChange();
                     break;
             };

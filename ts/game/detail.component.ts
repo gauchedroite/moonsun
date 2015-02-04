@@ -1,19 +1,24 @@
 ﻿
 import React = require("react/addons");
 import TypedReact = require("typed-react");
-import DescriptionStore = require("./description.store");
+import TalkStore = require("./talk.store");
+import QuestStore = require("./quest.store");
 
 
 interface IDetailProps {
-    store: DescriptionStore
+    talk: TalkStore;
+    quest: QuestStore;
+    children: any;
 };
 
-class DetailSpec extends TypedReact.Component<IDetailProps, any> {
+class Spec extends TypedReact.Component<IDetailProps, any> {
     componentDidMount() {
-        this.props.store.addChangeListener(this._onChange);
+        this.props.talk.addChangeListener(this._onChange);
+        this.props.quest.addChangeListener(this._onChange);
     }
     componentWillUnmount() {
-        this.props.store.removeAllListeners();
+        this.props.talk.removeAllListeners();
+        this.props.quest.removeAllListeners();
     }
 
     //
@@ -22,9 +27,12 @@ class DetailSpec extends TypedReact.Component<IDetailProps, any> {
     render() {
         var cx = React.addons.classSet({
             "detail": true,
-            "ofTalk": this.props.store.hide
+            "ofTalk": (this.props.talk.hide == false),
+            "ofQuest": (this.props.quest.hide == false)
         });
-        return React.createElement("div", { className: cx });
+        return React.createElement("div", { className: cx },
+            this.props.children
+            );
     }
 
     //
@@ -35,4 +43,6 @@ class DetailSpec extends TypedReact.Component<IDetailProps, any> {
     }
 }
 
-export = DetailSpec;
+
+var component = TypedReact.createClass(Spec);
+export = component;

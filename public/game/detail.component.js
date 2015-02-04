@@ -7,27 +7,31 @@ var __extends = this.__extends || function (d, b) {
 var React = require("react/addons");
 var TypedReact = require("typed-react");
 ;
-var DetailSpec = (function (_super) {
-    __extends(DetailSpec, _super);
-    function DetailSpec() {
+var Spec = (function (_super) {
+    __extends(Spec, _super);
+    function Spec() {
         _super.apply(this, arguments);
     }
-    DetailSpec.prototype.componentDidMount = function () {
-        this.props.store.addChangeListener(this._onChange);
+    Spec.prototype.componentDidMount = function () {
+        this.props.talk.addChangeListener(this._onChange);
+        this.props.quest.addChangeListener(this._onChange);
     };
-    DetailSpec.prototype.componentWillUnmount = function () {
-        this.props.store.removeAllListeners();
+    Spec.prototype.componentWillUnmount = function () {
+        this.props.talk.removeAllListeners();
+        this.props.quest.removeAllListeners();
     };
-    DetailSpec.prototype.render = function () {
+    Spec.prototype.render = function () {
         var cx = React.addons.classSet({
             "detail": true,
-            "ofTalk": this.props.store.hide
+            "ofTalk": (this.props.talk.hide == false),
+            "ofQuest": (this.props.quest.hide == false)
         });
-        return React.createElement("div", { className: cx });
+        return React.createElement("div", { className: cx }, this.props.children);
     };
-    DetailSpec.prototype._onChange = function () {
+    Spec.prototype._onChange = function () {
         this.forceUpdate();
     };
-    return DetailSpec;
+    return Spec;
 })(TypedReact.Component);
-module.exports = DetailSpec;
+var component = TypedReact.createClass(Spec);
+module.exports = component;

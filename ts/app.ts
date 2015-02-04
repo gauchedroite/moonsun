@@ -15,6 +15,8 @@ window.onload = function () {
 
     var store = new AppStore();
 
+    React.initializeTouchEvents(true);
+
     var appElement = React.createElement(AppComponent, null);
     React.render(appElement, document.getElementById("id-game-wrapper"));
 

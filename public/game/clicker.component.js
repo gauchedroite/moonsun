@@ -16,12 +16,21 @@ var ClickerSpec = (function (_super) {
             ActionCreators.clicked();
         };
     }
+    ClickerSpec.prototype.componentDidMount = function () {
+        this.props.store.addChangeListener(this._onChange);
+    };
+    ClickerSpec.prototype.componentWillUnmount = function () {
+        this.props.store.removeAllListeners();
+    };
     ClickerSpec.prototype.render = function () {
         var cx = React.addons.classSet({
             "game-events": true,
             "my-hide": this.props.store.hideClicker
         });
-        return React.createElement("div", { className: cx, onClick: this._handleOnClick });
+        return React.createElement("div", { className: cx, onClick: this._handleOnClick, onTouchEnd: this._handleOnClick });
+    };
+    ClickerSpec.prototype._onChange = function () {
+        this.forceUpdate();
     };
     return ClickerSpec;
 })(TypedReact.Component);

@@ -20,10 +20,12 @@ var Spec = (function (_super) {
     };
     Spec.prototype.render = function () {
         var cx = React.addons.classSet({
-            "description": true,
+            "pop": true,
             "my-hide": this.props.store.hide
         });
-        return React.createElement("div", { className: cx }, React.createElement("div", { className: "description-text-default" }, this.props.store.text));
+        return React.createElement("div", { className: cx }, React.createElement("div", {
+            dangerouslySetInnerHTML: { __html: this.props.store.text }
+        }));
     };
     Spec.prototype._onChange = function () {
         this.forceUpdate();

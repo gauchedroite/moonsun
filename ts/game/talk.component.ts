@@ -2,7 +2,7 @@
 import React = require("react/addons");
 import TypedReact = require("typed-react");
 //
-import Store = require("./description.store");
+import Store = require("./talk.store");
 
 
 interface IProps {
@@ -21,12 +21,18 @@ class Spec extends TypedReact.Component<IProps, any> {
     // render
     //
     render() {
+        var divStyle = {
+            display: (this.props.store.collapse ? "none" : "")
+        };
         var cx = React.addons.classSet({
-            "description": true,
+            "talk": true,
             "my-hide": this.props.store.hide
         });
-        return React.createElement("div", { className: cx },
-            React.createElement("div", { className: "description-text-default" }, this.props.store.text)
+        return React.createElement("div", { className: cx, style: divStyle },
+            React.createElement("div", {
+                className: (this.props.store.hide ? "my-hide" : ""),
+                dangerouslySetInnerHTML: { __html: this.props.store.text }
+            })
             );
     }
 
@@ -39,5 +45,5 @@ class Spec extends TypedReact.Component<IProps, any> {
 }
 
 
-var description = TypedReact.createClass(Spec);
-export = description;
+var component = TypedReact.createClass(Spec);
+export = component;

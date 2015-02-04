@@ -8,7 +8,7 @@ import ActionCreators = require("./app.actioncreators");
 var ActionTypes = Payload.ActionTypes;
 
 
-class DetailStore extends BaseStore {
+class Store extends BaseStore {
     public text: string = "";
     public hide: boolean = true;
 
@@ -17,12 +17,17 @@ class DetailStore extends BaseStore {
 
         this.dispatchToken = dispatcher.register((payload: Payload.IPayload) => {
             var action = payload.action;
+            var data = action.data;
 
             switch (action.type) {
-                case ActionTypes.SHOW_DESCRIPTION:
-                    var data = action.data;
+                case ActionTypes.SHOW_POP:
                     this.text = data.text;
                     this.hide = false;
+                    this.emitChange();
+                    break;
+
+                case ActionTypes.HIDE_POP:
+                    this.hide = true;
                     this.emitChange();
                     break;
             };
@@ -30,4 +35,4 @@ class DetailStore extends BaseStore {
     }
 }
 
-export = DetailStore;
+export = Store;

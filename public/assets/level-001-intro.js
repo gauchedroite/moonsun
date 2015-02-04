@@ -53,9 +53,7 @@ var Level_001_Intro = (function () {
             done: function () {
                 _this.attrib = 42;
             }
-        }).show("Mononcle", this.MASKINER).description("Le robot est en plein milieu de la rue.").description("Et il est pas mal gros.").head("Jack", this.JACK).line("une **chance** que j'ai ${attrib} rex", { when: function () {
-            return true;
-        } }).head("Jaques", this.JACK).line("ce n'est pas facile depuis que selly n'est plus là").show("Mononcle", this.MASKINER).head("Jaques", this.JACK).line("nope").description("Jack a parlé").value());
+        }).value());
         var LaFemmeEstSeule = function () {
             game.runner.popMessage("et je ne sais pas pourquoi...");
             _this.pc = _this.PC_encore;
@@ -71,7 +69,7 @@ var Level_001_Intro = (function () {
             return _this.pc == _this.PC_encore;
         }).show("maskiner", "gangmaskiner_1920_badge_small.jpg").head("jack", this.JACK).ask("Une autre question?").choice("Non, la femme a besoin d'aide immédiatement!", function () {
             _this.pc = _this.PC_pourri;
-        }).choice("Non, elle semble seule", LaFemmeEstSeule).value());
+        }).choice("Non, elle semble seule", LaFemmeEstSeule).timeout(Utils.Delay_Fast, 0).value());
         game.addAnim(game.newAnim(this).when(function () {
             return _this.pc == _this.PC_pourri;
         }).done(function () {
@@ -100,7 +98,7 @@ var Level_001_Intro = (function () {
     Level_001_Intro.prototype.Duchesse = function (game) {
         var _this = this;
         game.addQuestion(game.newQuestion(this).when(function () {
-            return _this.pc == _this.PC_qaz;
+            return _this.pc == _this.PC_qaz + 1;
         }).show("fraktarna", "gaussfraktarna_1920_badge_small.jpg").head("Jack", this.JACK).ask("Comment sont les chemises de la duchesse?").choice("Archi froissées", function () {
             _this.pc = _this.PC_intro;
         }, function () {

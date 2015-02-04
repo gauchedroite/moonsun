@@ -8,26 +8,26 @@ var dispatcher = require("./app.dispatcher");
 var Payload = require("./app.payload");
 var BaseStore = require("./base.store");
 var ActionTypes = Payload.ActionTypes;
-var DetailStore = (function (_super) {
-    __extends(DetailStore, _super);
-    function DetailStore() {
+var Store = (function (_super) {
+    __extends(Store, _super);
+    function Store() {
         var _this = this;
         _super.call(this);
-        this.text = "";
-        this.hide = true;
+        this.talker = "";
+        this.url = "";
         this.dispatchToken = dispatcher.register(function (payload) {
             var action = payload.action;
             switch (action.type) {
-                case ActionTypes.SHOW_DESCRIPTION:
+                case ActionTypes.SET_HEAD:
                     var data = action.data;
-                    _this.text = data.text;
-                    _this.hide = false;
+                    _this.talker = data.talker;
+                    _this.url = data.url;
                     _this.emitChange();
                     break;
             }
             ;
         });
     }
-    return DetailStore;
+    return Store;
 })(BaseStore);
-module.exports = DetailStore;
+module.exports = Store;

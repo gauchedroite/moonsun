@@ -44,9 +44,10 @@ class Level_001_Intro implements ILevel {
                 done: () => { this.attrib = 42; }
             })
 
-            .show("Mononcle", this.MASKINER)
-            .description("Le robot est en plein milieu de la rue.")
-            .description("Et il est pas mal gros.")
+            /*
+            //.show("Mononcle", this.MASKINER)
+            //.description("Le robot est en plein milieu de la rue.")
+            //.description("Et il est pas mal gros.")
 
             .head("Jack", this.JACK)
             .line("une **chance** que j'ai ${attrib} rex", { when: () => { return true; } })
@@ -59,6 +60,7 @@ class Level_001_Intro implements ILevel {
             .line("nope")
 
             .description("Jack a parlé")
+            */
             .value()
             )
         ;
@@ -90,7 +92,7 @@ class Level_001_Intro implements ILevel {
             .ask("Une autre question?")
             .choice("Non, la femme a besoin d'aide immédiatement!", () => { this.pc = this.PC_pourri; })
             .choice("Non, elle semble seule", LaFemmeEstSeule)
-        //.timeout(curious.Delay.Normal, 1)
+            .timeout(Utils.Delay_Fast, 0)
             .value()
             )
         ;
@@ -148,7 +150,7 @@ class Level_001_Intro implements ILevel {
 
     private Duchesse(game: Game) {
         game.addQuestion(game.newQuestion(this)
-            .when(() => { return this.pc == this.PC_qaz; })
+            .when(() => { return this.pc == this.PC_qaz + 1; })
 
             .show("fraktarna", "gaussfraktarna_1920_badge_small.jpg")
             .head("Jack", this.JACK)

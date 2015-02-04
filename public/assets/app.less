@@ -176,6 +176,145 @@ img {
     }
 }
 
+.detail {
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.95);
+    width: @width;
+    height: 0;
+    transition: all 0.15s;
+
+    &.ofTalk {
+        height: 200px;
+        transition: all 0.25s;
+    }
+
+    &.ofQuest {
+        //height: 300px;
+        transition: all 0.25s;
+    }
+}
+
+.head {
+    position: absolute;
+    width: @headwidth;
+    height: @height / 2;
+    background-repeat: no-repeat;
+    float: left;
+    background-position-x: 0;
+    transition: all 0.4s;
+
+    &.my-hide {
+        background-position-x: -@headwidth;
+        transition: all 0.4s;
+    }
+
+    div:first-child {
+        text-align: right;
+        margin: 3px 10px 0 0;
+
+        div {
+            font-family: Impact,  Haettenschweiler,  'Arial Narrow Bold',  sans-serif;
+            font-size: 35px;
+            background-color: #000;
+            color: #eee;
+            border-radius: 12px;
+            padding: 0 10px;
+            display: inline-block;
+            .wkit();
+        }
+    }
+}
+
+.talk {
+    width: @width - @headwidth;
+    height: @height / 2;
+    margin-left: @headwidth;
+
+    div {
+        padding: 16px 90px 0 0;
+        font-size: 32px;
+        line-height: 28px;
+        transition: opacity .75s;
+
+        &.my-hide {
+            opacity: 0;
+        }
+    }
+}
+
+.question {
+    width: @width - @headwidth;
+    margin-left: @headwidth;
+    transition: opacity .75s;
+
+    &.my-hide {
+        opacity: 0;
+    }
+
+    div:first-child {
+        padding: 16px 90px 0 0;
+        font-size: 32px;
+        line-height: 28px;
+    }
+
+    ul {
+        font-size: 32px;
+        list-style-type: none;
+        text-align: left;
+        cursor: pointer;
+        counter-reset: qno;
+        padding-left: 80px;
+
+        li {
+            margin-top: 16px;
+            margin-bottom: 32px;
+            border-bottom: 2px solid @bordercolor;
+            counter-increment: qno;
+            transform: scale(1);
+
+            &.my-hide {
+                display: block !important;
+                opacity: 0.5;
+                transform: scale(0.5);
+            }
+
+            &.myQuestSelected {
+                animation: blink 0.1s ease 4;
+            }
+
+            &.myQuestUnselected {
+                opacity: 0.2;
+                transition: opacity ease 0.5s;
+            }
+        }
+
+        li:nth-child(1) { transition: opacity 0.5s, transform 0.5s; }
+        li:nth-child(2) { transition: opacity 0.5s 0.1s, transform 0.5s 0.1s; }
+        li:nth-child(3) { transition: opacity 0.5s 0.2s, transform 0.5s 0.2s; }
+        li:nth-child(4) { transition: opacity 0.5s 0.3s, transform 0.5s 0.3s; }
+        li:nth-child(5) { transition: opacity 0.5s 0.4s, transform 0.5s 0.4s; }
+    }
+}
+
+.progress {
+    position: absolute;
+    top: -105px;
+    left: (@width - 122)/2;
+    width: 122px;
+    height: 122px;
+    transition: opacity 0.4s;
+
+    &.my-hide {
+        opacity: 0;
+    }
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
 .game-events {
     position: absolute;
     width: @width;
@@ -186,4 +325,105 @@ img {
     &.my-hide {
         top: @height;
     }
+}
+
+.menu {
+    &.my-hide {
+        transition: all 0.25s;
+    }
+}
+
+.menu-bg {
+    position: absolute;
+    width: @width;
+    height: @height;
+    background: black;
+    opacity: 0.5;
+    transition: opacity 0.25s;
+
+    &.my-hide {
+        opacity: 0;
+        transition: opacity 0.25s;
+    }
+}
+
+.menu-items {
+    font-family:'Arial Black', Gadget, sans-serif;
+    font-size: 44px;
+    line-height: 40px;
+}
+
+.menu-circle {
+    padding: 50px;
+    border: solid 20px @bluemoon;
+    border-radius: 50%;
+    background-color: #000;
+    transform: scale(1);
+    transition: all 0.2s;
+    .wkit();
+
+    &.my-hide {
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.2s;
+    }
+}
+
+.menu-item-restart {
+    position: absolute;
+    top: 30px;
+    left: 100px;
+    width: 175px;
+    height: 175px;
+    background-color: @bluemoon / 4;
+    color: #ff6a00;
+
+    display: table;
+    &>div {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        pointer-events: none;
+    }
+}
+
+.menu-item-play {
+    position: absolute;
+    top: 220px;
+    left: 600px;
+    width: 150px;
+    height: 150px;
+    background-color: @bluemoon / 4;
+    color: #4cff00;
+
+    &.selected {
+        transition: opacity 0.5s, transform 0.5s;
+        transform: scale(6) rotate(30deg);
+        opacity: 0;
+    }
+
+    display: table;
+    &>div {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        pointer-events: none;
+    }
+}
+
+.feedback {
+    position: absolute;
+    top: @height + 1000;
+    width: 20px;
+    height: 20px;
+    border: 5px solid #ff0000;
+    border-radius: 50%;
+}
+
+.svg {
+    position: absolute;
+    left: @width - 80;
+    width: @width;
+    height: 50px;
+    .wkit();
 }

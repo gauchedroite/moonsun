@@ -8,22 +8,15 @@ var React = require("react/addons");
 var TypedReact = require("typed-react");
 ;
 ;
+var img = new Image();
 var Spec = (function (_super) {
     __extends(Spec, _super);
     function Spec() {
-        var _this = this;
         _super.apply(this, arguments);
-        this._onLoad = function () {
-            _this.setState({
-                hideCinema: false,
-                hideWait: true
-            });
-        };
     }
     Spec.prototype.getInitialState = function () {
         return {
-            hideCinema: true,
-            hideWait: true,
+            hide: true,
             url: null
         };
     };
@@ -34,25 +27,29 @@ var Spec = (function (_super) {
         this.props.store.removeAllListeners();
     };
     Spec.prototype.render = function () {
-        var cxCinema = React.addons.classSet({
-            "cinema": true,
-            "my-hide": this.state.hideCinema
+        var divStyle = {
+            backgroundImage: 'url(' + this.props.store.url + ')'
+        };
+        var cx = React.addons.classSet({
+            "head": true,
+            "my-hide": this.state.hide
         });
-        var cxWait = React.addons.classSet({
-            "cinema-wait": true,
-            "my-hide": this.state.hideWait
-        });
-        return React.createElement("div", null, React.createElement("div", { className: cxCinema }, React.createElement("img", { width: "960", height: "540", src: this.state.url, onLoad: this._onLoad })), React.createElement("div", { className: cxWait }, React.createElement("div", null, this.props.store.wait)));
+        return React.createElement("div", { className: cx, style: divStyle }, React.createElement("div", null, React.createElement("div", null, this.props.store.talker)));
     };
     Spec.prototype._onChange = function () {
         var _this = this;
-        this.setState({
-            hideCinema: true,
-            hideWait: false
-        });
-        setTimeout(function () {
-            _this.setState({ url: _this.props.store.url });
-        }, 250);
+        if (this.state.url !== this.props.store.url) {
+            this.setState({
+                hide: true
+            });
+            img.onload = function (ev) {
+                _this.setState({
+                    hide: false,
+                    url: _this.props.store.url
+                });
+            };
+            img.src = this.props.store.url;
+        }
     };
     return Spec;
 })(TypedReact.Component);

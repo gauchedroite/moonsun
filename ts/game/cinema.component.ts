@@ -1,30 +1,31 @@
 ﻿
 import React = require("react/addons");
 import TypedReact = require("typed-react");
+//
 import CinemaStore = require("./cinema.store");
 
 
 //
 // Component props shape
 //
-interface ICinemaProps {
+interface IProps {
     store: CinemaStore
 };
 
 //
 // Component state shape
 //
-interface ICinemaState {
+interface IState {
     hideCinema?: boolean;
     hideWait?: boolean;
     url?: string;
 };
 
-class CinemaSpec extends TypedReact.Component<ICinemaProps, ICinemaState> {
+class Spec extends TypedReact.Component<IProps, IState> {
     //
     // Component state
     //
-    getInitialState() {
+    getInitialState(): IState {
         return {
             hideCinema: true,
             hideWait: true,
@@ -85,5 +86,5 @@ class CinemaSpec extends TypedReact.Component<ICinemaProps, ICinemaState> {
 }
 
 
-var component = TypedReact.createClass(CinemaSpec);
+var component = TypedReact.createClass(Spec);
 export = component;

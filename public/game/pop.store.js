@@ -17,14 +17,14 @@ var Store = (function (_super) {
         this.hide = true;
         this.dispatchToken = dispatcher.register(function (payload) {
             var action = payload.action;
+            var data = action.data;
             switch (action.type) {
-                case ActionTypes.SHOW_DESCRIPTION:
-                    var data = action.data;
+                case ActionTypes.SHOW_POP:
                     _this.text = data.text;
                     _this.hide = false;
                     _this.emitChange();
                     break;
-                case ActionTypes.HIDE_DESCRIPTION:
+                case ActionTypes.HIDE_POP:
                     _this.hide = true;
                     _this.emitChange();
                     break;
