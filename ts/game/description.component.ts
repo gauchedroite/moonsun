@@ -1,6 +1,8 @@
 ﻿
 import React = require("react/addons");
 import TypedReact = require("typed-react");
+import ActionCreators = require("./app.actioncreators");
+import game = require("../helpers/GameConstants");
 //
 import Store = require("./description.store");
 
@@ -15,6 +17,16 @@ class Spec extends TypedReact.Component<IProps, any> {
     }
     componentWillUnmount() {
         this.props.store.removeAllListeners();
+    }
+    componentDidUpdate() {
+        if (this.props.store.hide) {
+            var desc = <HTMLDivElement>this.getDOMNode();
+            var onFadeout = (event) => {
+                desc.removeEventListener(game.EVT_TRANSITION_END, onFadeout);
+                ActionCreators.fire(this.props.store.nextAction);
+            };
+            desc.addEventListener(game.EVT_TRANSITION_END, onFadeout);
+        }
     }
 
     //

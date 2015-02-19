@@ -41,6 +41,7 @@ var Level_001_Intro = (function () {
         var game = this.game;
         game.runner.preload([this.imgFolder + this.JACK, this.imgFolder + this.SPECKY, this.imgFolder + this.MASKINER]);
         this.Accident(game);
+        this.Qaz(game);
         this.Duchesse(game);
         game.addAnim(game.newAnim(this).when(function () {
             return _this.pc == _this.PC_intro;
@@ -56,7 +57,7 @@ var Level_001_Intro = (function () {
         }).value());
         var LaFemmeEstSeule = function () {
             game.runner.popMessage("et je ne sais pas pourquoi...");
-            _this.pc = _this.PC_encore;
+            _this.pc = _this.PC_pourri;
         };
         game.addQuestion(game.newQuestion(this).when(function () {
             return _this.pc == _this.PC_blesses;
@@ -64,7 +65,7 @@ var Level_001_Intro = (function () {
             _this.pc = _this.PC_qaz;
         }, function () {
             return true;
-        }).choice("Non, elle semble seule", LaFemmeEstSeule).choice("Non, j'appelle le 9-1-1", this.Call911).timeout(Utils.Delay_Normal, 0).value());
+        }).choice("Non, elle semble seule", LaFemmeEstSeule).choice("Non, j'appelle le 9-1-1", this.Call911).timeout(Utils.Delay_Normal, 1).value());
         game.addQuestion(game.newQuestion(this).when(function () {
             return _this.pc == _this.PC_encore;
         }).show("maskiner", "gangmaskiner_1920_badge_small.jpg").head("jack", this.JACK).ask("Une autre question?").choice("Non, la femme a besoin d'aide immédiatement!", function () {
@@ -74,7 +75,7 @@ var Level_001_Intro = (function () {
             return _this.pc == _this.PC_pourri;
         }).done(function () {
             _this.pc = _this.PC_gameover;
-        }).show("La badge", "spanviken_1920_badge_small.jpg").head("Jack", this.JACK).line("assez pourri...").description("c'est la fin de mon histoire").description("désolé de la perte de temps...", DescOpts.Center).value());
+        }).show("La badge", "spanviken_1920_badge_small.jpg").head("Jack", this.JACK).line("assez pourri...").line("pire que ça et ca sentirait..").description("c'est la fin de mon histoire").description("désolé de la perte de temps...", DescOpts.Center).value());
     };
     Level_001_Intro.prototype.Call911 = function () {
         this.pc = this.PC_gameover;

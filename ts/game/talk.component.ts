@@ -1,6 +1,8 @@
 ﻿
 import React = require("react/addons");
 import TypedReact = require("typed-react");
+import ActionCreators = require("./app.actioncreators");
+import game = require("../helpers/GameConstants");
 //
 import Store = require("./talk.store");
 
@@ -16,6 +18,22 @@ class Spec extends TypedReact.Component<IProps, any> {
     componentWillUnmount() {
         this.props.store.removeAllListeners();
     }
+    componentDidUpdate() {
+        if (this.props.store.hideText) {
+            /*
+            var talk = <HTMLDivElement>this.getDOMNode();
+            var text = talk.firstElementChild;
+            var onFadeout = (event) => {
+                text.removeEventListener(game.EVT_TRANSITION_END, onFadeout);
+                ActionCreators.fire(this.props.store.nextAction);
+            };
+            text.addEventListener(game.EVT_TRANSITION_END, onFadeout);
+            */
+            setTimeout(() => {
+                ActionCreators.fire(this.props.store.nextAction);
+            }, 150);
+        }
+    }
 
     //
     // render
@@ -30,7 +48,7 @@ class Spec extends TypedReact.Component<IProps, any> {
         });
         return React.createElement("div", { className: cx, style: divStyle },
             React.createElement("div", {
-                className: (this.props.store.hide ? "my-hide" : ""),
+                className: (this.props.store.hideText ? "my-hide" : ""),
                 dangerouslySetInnerHTML: { __html: this.props.store.text }
             })
             );

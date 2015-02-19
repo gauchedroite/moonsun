@@ -221,6 +221,8 @@ img {
           transition: opacity .75s;
 }
 .talk div.my-hide {
+  -webkit-transition: opacity 0.10s;
+          transition: opacity 0.10s;
   opacity: 0;
 }
 .question {

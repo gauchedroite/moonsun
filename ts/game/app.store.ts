@@ -15,6 +15,7 @@ import ActionCreators = require("./app.actioncreators");
 import BaseStore = require("./base.store");
 
 var ActionTypes = Payload.ActionTypes;
+var RunnerActions = Payload.RunnerActions;
 
 //
 // Local variables
@@ -40,8 +41,8 @@ class Store extends BaseStore implements IRunner {
     //
     // Private variables and methods
     //
-    private animEvent: () => void;
-    private answerEvent: (choice: number) => void;
+    private gotoNext: () => void;
+    private running: string = null;
     private selectedQuest: number = -1;
 
     //
@@ -65,42 +66,38 @@ class Store extends BaseStore implements IRunner {
 
         this.dispatchToken = dispatcher.register((payload: Payload.IPayload) => {
             var action = payload.action;
-            var data = action.data;
 
             switch (action.type) {
                 case ActionTypes.CLICK:
-                    setTimeout(this.animEvent, 0);
+                    setTimeout(this.gotoNext, 0);
                     break;
 
-                case ActionTypes.SHOW_ANIM:
-                case ActionTypes.SHOW_DESCRIPTION:
-                case ActionTypes.SHOW_LINE:
-                    this.animEvent = data.nextEvent;
+                case ActionTypes.HIDE_RUNNING:
+                    var data0 = <Payload.IHideRunning>action.data;
+                    if (data0.now == null) {
+                        setTimeout(() => { ActionCreators.fire(data0.nextAction); }, 0);
+                    }
                     break;
 
                 case ActionTypes.SHOW_QUEST:
-                    this.answerEvent = data.answerEvent;
                     this.hideClicker = true;
                     this.emitChange();
                     break;
 
                 case ActionTypes.SELECT_QUEST:
+                    var data1 = action.data;
                     this.hideClicker = false;
-                    this.selectedQuest = data.index;
+                    this.selectedQuest = data1.index;
                     this.emitChange();
-                    break;
-
-                case ActionTypes.QUEST_ANIM_DONE:
-                    setTimeout(() => { this.answerEvent(this.selectedQuest); }, 0);
+                    setTimeout(this.gotoNext, 0);
                     break;
 
                 case ActionTypes.SHOW_FEEDBACK:
-                    //if (this.showFeedback == false) {
-                        this.feedbackX = data.clientX;
-                        this.feedbackY = data.clientY;
-                        this.showFeedback = true;
-                        this.emitChange();
-                    //}
+                    var data2 = action.data;
+                    this.feedbackX = data2.clientX;
+                    this.feedbackY = data2.clientY;
+                    this.showFeedback = true;
+                    this.emitChange();
                     break;
 
                 case ActionTypes.HIDE_FEEDBACK:
@@ -121,15 +118,26 @@ class Store extends BaseStore implements IRunner {
     };
 
     showAnim = (text: string, url: string, nextEvent: () => void, immediate?: boolean): void => {
-        ActionCreators.showAnim(text, url, nextEvent);
+        ActionCreators.hideRunningPrepareNextFire(
+            this.running,
+            RunnerActions.ANIM,
+            ActionCreators.buildShowAnim(text, url));
+
+        this.gotoNext = () => {
+            this.running = RunnerActions.ANIM;
+            nextEvent();
+        };
     }
 
     showDescription = (text: string, nextEvent: () => void, options?: IDescOptions): void => {
-        ActionCreators.showDescription(text, nextEvent);
+        ActionCreators.hideRunningPrepareNextFire(
+            this.running,
+            RunnerActions.DESC,
+            ActionCreators.buildShowDescription(text));
 
-        this.animEvent = () => {
-            ActionCreators.hideDescription();
-            setTimeout(nextEvent, 150);
+        this.gotoNext = () => {
+            this.running = RunnerActions.DESC;
+            nextEvent();
         };
     }
 
@@ -139,25 +147,34 @@ class Store extends BaseStore implements IRunner {
     };
 
     showLine = (line: string, nextEvent: () => void): void => {
-        ActionCreators.showLine(line, nextEvent);
+        ActionCreators.hideRunningPrepareNextFire(
+            this.running,
+            RunnerActions.LINE,
+            ActionCreators.buildShowLine(line));
 
-        this.animEvent = () => {
-            ActionCreators.hideLine();
-            setTimeout(nextEvent, 0);
+        this.gotoNext = () => {
+            this.running = RunnerActions.LINE;
+            nextEvent();
         };
     };
 
     showQuestion = (question: string, choices: Array<string>, timeoutMax: number, defaultChoice: number, answerEvent: (choice: number) => void): void => {
-        ActionCreators.showQuest(question, choices, timeoutMax, defaultChoice, answerEvent);
-        //answerEvent(index) will be called on HIDE_QUEST
+        ActionCreators.hideRunningPrepareNextFire(
+            this.running,
+            RunnerActions.QUEST,
+            ActionCreators.buildShowQuest(question, choices, timeoutMax, defaultChoice));
+
+        this.gotoNext = () => {
+            this.running = RunnerActions.QUEST;
+            answerEvent(this.selectedQuest);
+        };
     };
 
     popMessage = (message: string): void => {
-        ActionCreators.showPop(message);
-
         setTimeout(() => {
-            ActionCreators.hidePop();
-        }, 3000);
+            ActionCreators.showPop(message);
+            setTimeout(() => { ActionCreators.hidePop(); }, 3000);
+        }, 1000);
     };
 
     gameOver = (): void => {

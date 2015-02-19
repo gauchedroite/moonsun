@@ -32,7 +32,7 @@ class Level_001_Intro implements ILevel {
         game.runner.preload([this.imgFolder + this.JACK, this.imgFolder + this.SPECKY, this.imgFolder + this.MASKINER]);
 
         this.Accident(game);
-        //this.Qaz(game);
+        this.Qaz(game);
         this.Duchesse(game);
 
         game.addAnim(game.newAnim(this)
@@ -44,7 +44,7 @@ class Level_001_Intro implements ILevel {
                 done: () => { this.attrib = 42; }
             })
 
-            /*
+/*
             //.show("Mononcle", this.MASKINER)
             //.description("Le robot est en plein milieu de la rue.")
             //.description("Et il est pas mal gros.")
@@ -54,12 +54,14 @@ class Level_001_Intro implements ILevel {
 
             .head("Jaques", this.JACK) //jack-pensif
             .line("ce n'est pas facile depuis que selly n'est plus là")
+            .line("nope")
             .show("Mononcle", this.MASKINER)
 
             .head("Jaques", this.JACK) //jack-pensif
             .line("nope")
 
             .description("Jack a parlé")
+            .description("Qu'est-ce qu'il cause bien ce Jack!")
             */
             .value()
             )
@@ -67,7 +69,7 @@ class Level_001_Intro implements ILevel {
 
         var LaFemmeEstSeule = () => {
             game.runner.popMessage("et je ne sais pas pourquoi...");
-            this.pc = this.PC_encore;
+            this.pc = this.PC_pourri;
         };
 
         game.addQuestion(game.newQuestion(this)
@@ -79,7 +81,7 @@ class Level_001_Intro implements ILevel {
             .choice("Non, la femme a besoin d'aide immédiatement!", () => { this.pc = this.PC_qaz; }, () => { return true; })
             .choice("Non, elle semble seule", LaFemmeEstSeule)
             .choice("Non, j'appelle le 9-1-1", this.Call911)
-            .timeout(Utils.Delay_Normal, 0)
+            .timeout(Utils.Delay_Normal, 1)
             .value()
             )
         ;
@@ -104,6 +106,7 @@ class Level_001_Intro implements ILevel {
             .show("La badge", "spanviken_1920_badge_small.jpg")
             .head("Jack", this.JACK)
             .line("assez pourri...")
+            .line("pire que ça et ca sentirait..")
             .description("c'est la fin de mon histoire")
             .description("désolé de la perte de temps...", DescOpts.Center)
             .value()

@@ -3,37 +3,49 @@ var dispatcher = require("./app.dispatcher");
 var AppActionCreators = (function () {
     function AppActionCreators() {
     }
+    AppActionCreators.fire = function (action) {
+        dispatcher.handleViewAction(action);
+    };
     AppActionCreators.clicked = function () {
         var action = {
             type: Payload.ActionTypes.CLICK
         };
         dispatcher.handleViewAction(action);
     };
-    AppActionCreators.showAnim = function (text, url, nextEvent) {
+    AppActionCreators.hideRunningPrepareNextFire = function (now, next, nextAction) {
         var action = {
+            type: Payload.ActionTypes.HIDE_RUNNING,
+            data: {
+                now: now,
+                next: next,
+                nextAction: nextAction
+            }
+        };
+        dispatcher.handleViewAction(action);
+    };
+    AppActionCreators.buildShowAnim = function (text, url) {
+        return {
             type: Payload.ActionTypes.SHOW_ANIM,
             data: {
                 text: text,
-                url: url,
-                nextEvent: nextEvent
+                url: url
             }
         };
+    };
+    AppActionCreators.showAnim = function (text, url) {
+        var action = AppActionCreators.buildShowAnim(text, url);
         dispatcher.handleViewAction(action);
     };
-    AppActionCreators.showDescription = function (text, nextEvent) {
-        var action = {
+    AppActionCreators.buildShowDescription = function (text) {
+        return {
             type: Payload.ActionTypes.SHOW_DESCRIPTION,
             data: {
-                text: text,
-                nextEvent: nextEvent
+                text: text
             }
         };
-        dispatcher.handleViewAction(action);
     };
-    AppActionCreators.hideDescription = function () {
-        var action = {
-            type: Payload.ActionTypes.HIDE_DESCRIPTION
-        };
+    AppActionCreators.showDescription = function (text) {
+        var action = AppActionCreators.buildShowDescription(text);
         dispatcher.handleViewAction(action);
     };
     AppActionCreators.showPop = function (text) {
@@ -61,33 +73,31 @@ var AppActionCreators = (function () {
         };
         dispatcher.handleViewAction(action);
     };
-    AppActionCreators.showLine = function (text, nextEvent) {
-        var action = {
+    AppActionCreators.buildShowLine = function (text) {
+        return {
             type: Payload.ActionTypes.SHOW_LINE,
             data: {
-                text: text,
-                nextEvent: nextEvent
+                text: text
             }
         };
+    };
+    AppActionCreators.showLine = function (text) {
+        var action = AppActionCreators.buildShowLine(text);
         dispatcher.handleViewAction(action);
     };
-    AppActionCreators.hideLine = function () {
-        var action = {
-            type: Payload.ActionTypes.HIDE_LINE
-        };
-        dispatcher.handleViewAction(action);
-    };
-    AppActionCreators.showQuest = function (question, choices, timeoutMax, defaultChoice, answerEvent) {
-        var action = {
+    AppActionCreators.buildShowQuest = function (question, choices, timeoutMax, defaultChoice) {
+        return {
             type: Payload.ActionTypes.SHOW_QUEST,
             data: {
                 question: question,
                 choices: choices,
                 timeoutMax: timeoutMax,
-                defaultChoice: defaultChoice,
-                answerEvent: answerEvent
+                defaultChoice: defaultChoice
             }
         };
+    };
+    AppActionCreators.showQuest = function (question, choices, timeoutMax, defaultChoice) {
+        var action = AppActionCreators.buildShowQuest(question, choices, timeoutMax, defaultChoice);
         dispatcher.handleViewAction(action);
     };
     AppActionCreators.selectQuest = function (index) {
@@ -99,7 +109,7 @@ var AppActionCreators = (function () {
         };
         dispatcher.handleViewAction(action);
     };
-    AppActionCreators.questAnimDone = function () {
+    AppActionCreators.questDone = function () {
         var action = {
             type: Payload.ActionTypes.QUEST_ANIM_DONE
         };

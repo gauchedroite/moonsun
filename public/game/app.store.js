@@ -16,6 +16,7 @@ var MenuStore = require("./menu.store");
 var ActionCreators = require("./app.actioncreators");
 var BaseStore = require("./base.store");
 var ActionTypes = Payload.ActionTypes;
+var RunnerActions = Payload.RunnerActions;
 var cinema = new CinemaStore();
 var description = new DescriptionStore();
 var pop = new PopStore();
@@ -32,17 +33,22 @@ var Store = (function (_super) {
         this.feedbackX = -1;
         this.feedbackY = -1;
         this.showFeedback = false;
+        this.running = null;
         this.selectedQuest = -1;
         this.ready = function () {
         };
         this.showAnim = function (text, url, nextEvent, immediate) {
-            ActionCreators.showAnim(text, url, nextEvent);
+            ActionCreators.hideRunningPrepareNextFire(_this.running, RunnerActions.ANIM, ActionCreators.buildShowAnim(text, url));
+            _this.gotoNext = function () {
+                _this.running = RunnerActions.ANIM;
+                nextEvent();
+            };
         };
         this.showDescription = function (text, nextEvent, options) {
-            ActionCreators.showDescription(text, nextEvent);
-            _this.animEvent = function () {
-                ActionCreators.hideDescription();
-                setTimeout(nextEvent, 150);
+            ActionCreators.hideRunningPrepareNextFire(_this.running, RunnerActions.DESC, ActionCreators.buildShowDescription(text));
+            _this.gotoNext = function () {
+                _this.running = RunnerActions.DESC;
+                nextEvent();
             };
         };
         this.setHead = function (talker, url, nextEvent) {
@@ -50,20 +56,26 @@ var Store = (function (_super) {
             setTimeout(nextEvent, 0);
         };
         this.showLine = function (line, nextEvent) {
-            ActionCreators.showLine(line, nextEvent);
-            _this.animEvent = function () {
-                ActionCreators.hideLine();
-                setTimeout(nextEvent, 0);
+            ActionCreators.hideRunningPrepareNextFire(_this.running, RunnerActions.LINE, ActionCreators.buildShowLine(line));
+            _this.gotoNext = function () {
+                _this.running = RunnerActions.LINE;
+                nextEvent();
             };
         };
         this.showQuestion = function (question, choices, timeoutMax, defaultChoice, answerEvent) {
-            ActionCreators.showQuest(question, choices, timeoutMax, defaultChoice, answerEvent);
+            ActionCreators.hideRunningPrepareNextFire(_this.running, RunnerActions.QUEST, ActionCreators.buildShowQuest(question, choices, timeoutMax, defaultChoice));
+            _this.gotoNext = function () {
+                _this.running = RunnerActions.QUEST;
+                answerEvent(_this.selectedQuest);
+            };
         };
         this.popMessage = function (message) {
-            ActionCreators.showPop(message);
             setTimeout(function () {
-                ActionCreators.hidePop();
-            }, 3000);
+                ActionCreators.showPop(message);
+                setTimeout(function () {
+                    ActionCreators.hidePop();
+                }, 3000);
+            }, 1000);
         };
         this.gameOver = function () {
             alert("GAME OVER");
@@ -75,34 +87,33 @@ var Store = (function (_super) {
         window.appStore = this;
         this.dispatchToken = dispatcher.register(function (payload) {
             var action = payload.action;
-            var data = action.data;
             switch (action.type) {
                 case ActionTypes.CLICK:
-                    setTimeout(_this.animEvent, 0);
+                    setTimeout(_this.gotoNext, 0);
                     break;
-                case ActionTypes.SHOW_ANIM:
-                case ActionTypes.SHOW_DESCRIPTION:
-                case ActionTypes.SHOW_LINE:
-                    _this.animEvent = data.nextEvent;
+                case ActionTypes.HIDE_RUNNING:
+                    var data0 = action.data;
+                    if (data0.now == null) {
+                        setTimeout(function () {
+                            ActionCreators.fire(data0.nextAction);
+                        }, 0);
+                    }
                     break;
                 case ActionTypes.SHOW_QUEST:
-                    _this.answerEvent = data.answerEvent;
                     _this.hideClicker = true;
                     _this.emitChange();
                     break;
                 case ActionTypes.SELECT_QUEST:
+                    var data1 = action.data;
                     _this.hideClicker = false;
-                    _this.selectedQuest = data.index;
+                    _this.selectedQuest = data1.index;
                     _this.emitChange();
-                    break;
-                case ActionTypes.QUEST_ANIM_DONE:
-                    setTimeout(function () {
-                        _this.answerEvent(_this.selectedQuest);
-                    }, 0);
+                    setTimeout(_this.gotoNext, 0);
                     break;
                 case ActionTypes.SHOW_FEEDBACK:
-                    _this.feedbackX = data.clientX;
-                    _this.feedbackY = data.clientY;
+                    var data2 = action.data;
+                    _this.feedbackX = data2.clientX;
+                    _this.feedbackY = data2.clientY;
                     _this.showFeedback = true;
                     _this.emitChange();
                     break;

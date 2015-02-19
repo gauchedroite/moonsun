@@ -17,6 +17,7 @@ class appDispatcher extends Flux.Dispatcher<Payload.IPayload>
             source: Payload.PayloadSources.VIEW_ACTION,
             action: action
         };
+        //console.log(action.type);
         this.dispatch(payload);
     }
 }

@@ -11,3 +11,4 @@ ts/public/
 ts/typings/
 img/
 .brackets.json
+dist/

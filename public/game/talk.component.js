@@ -6,6 +6,7 @@ var __extends = this.__extends || function (d, b) {
 };
 var React = require("react/addons");
 var TypedReact = require("typed-react");
+var ActionCreators = require("./app.actioncreators");
 ;
 var Spec = (function (_super) {
     __extends(Spec, _super);
@@ -18,6 +19,14 @@ var Spec = (function (_super) {
     Spec.prototype.componentWillUnmount = function () {
         this.props.store.removeAllListeners();
     };
+    Spec.prototype.componentDidUpdate = function () {
+        var _this = this;
+        if (this.props.store.hideText) {
+            setTimeout(function () {
+                ActionCreators.fire(_this.props.store.nextAction);
+            }, 150);
+        }
+    };
     Spec.prototype.render = function () {
         var divStyle = {
             display: (this.props.store.collapse ? "none" : "")
@@ -27,7 +36,7 @@ var Spec = (function (_super) {
             "my-hide": this.props.store.hide
         });
         return React.createElement("div", { className: cx, style: divStyle }, React.createElement("div", {
-            className: (this.props.store.hide ? "my-hide" : ""),
+            className: (this.props.store.hideText ? "my-hide" : ""),
             dangerouslySetInnerHTML: { __html: this.props.store.text }
         }));
     };

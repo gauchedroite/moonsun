@@ -6,6 +6,7 @@ import BaseStore = require("./base.store");
 import ActionCreators = require("./app.actioncreators");
 
 var ActionTypes = Payload.ActionTypes;
+var RunnerActions = Payload.RunnerActions;
 
 
 class Store extends BaseStore {
@@ -16,30 +17,46 @@ class Store extends BaseStore {
     public hide: boolean = true;
     public hideClock: boolean = true;
     public indexSelected: number = -1;
+    public nextAction: any;
+    public fireNextAction: boolean = false;
 
     constructor() {
         super();
 
         this.dispatchToken = dispatcher.register((payload: Payload.IPayload) => {
             var action = payload.action;
-            var data = action.data;
 
             switch (action.type) {
+                case ActionTypes.HIDE_RUNNING:
+                    var data0 = <Payload.IHideRunning>action.data;
+                    if (data0.now == RunnerActions.QUEST) {
+                        this.hide = true;
+                        this.hideClock = true;
+                        this.nextAction = data0.nextAction;
+                        this.fireNextAction = false;
+                        this.emitChange();
+                    }
+                    break;
+
                 case ActionTypes.SHOW_QUEST:
-                    this.question = data.question;
-                    this.choices = data.choices;
-                    this.timeoutMax = data.timeoutMax;
-                    this.defaultChoice = data.defaultChoice;
+                    var data1 = action.data;
+                    this.question = data1.question;
+                    this.choices = data1.choices;
+                    this.timeoutMax = data1.timeoutMax;
+                    this.defaultChoice = data1.defaultChoice;
                     this.hideClock = (this.timeoutMax == 0);
                     this.indexSelected = -1;
                     this.hide = false;
+                    this.fireNextAction = false;
                     this.emitChange();
                     break;
 
                 case ActionTypes.SELECT_QUEST:
+                    var data2 = action.data;
                     this.hide = true;
                     this.hideClock = true;
-                    this.indexSelected = data.index;
+                    this.indexSelected = data2.index;
+                    this.fireNextAction = true;
                     this.emitChange();
                     break;
             };

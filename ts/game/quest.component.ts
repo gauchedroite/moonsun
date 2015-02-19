@@ -50,8 +50,10 @@ class ClockSpec extends TypedReact.Component<any, any> {
             clearTimeout(this.handle);
             this.handle = 0;
         }
-        if (this.props.hideClock || this.props.timeoutMax == 0)
+        if (this.props.hideClock || this.props.timeoutMax == 0) {
+            ctx.clearRect(0, 0, 2 * clockX, 2 * clockY);
             return;
+        }
 
         var drawClock = () => {
             var timeoutMax = this.props.timeoutMax;
@@ -197,7 +199,11 @@ class Spec extends TypedReact.Component<IProps, IState> {
         }
         else {
             this.forceUpdate();
-            setTimeout(ActionCreators.questAnimDone, 750);//Leave time for the selected answer to blink
+            if (this.props.store.fireNextAction) {
+                setTimeout(() => {
+                    ActionCreators.fire(this.props.store.nextAction);
+                }, 1000);//Leave time for the selected answer to blink
+            }
         }
     }
 

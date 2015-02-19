@@ -6,6 +6,8 @@ var __extends = this.__extends || function (d, b) {
 };
 var React = require("react/addons");
 var TypedReact = require("typed-react");
+var ActionCreators = require("./app.actioncreators");
+var game = require("../helpers/GameConstants");
 ;
 var Spec = (function (_super) {
     __extends(Spec, _super);
@@ -17,6 +19,17 @@ var Spec = (function (_super) {
     };
     Spec.prototype.componentWillUnmount = function () {
         this.props.store.removeAllListeners();
+    };
+    Spec.prototype.componentDidUpdate = function () {
+        var _this = this;
+        if (this.props.store.hide) {
+            var desc = this.getDOMNode();
+            var onFadeout = function (event) {
+                desc.removeEventListener(game.EVT_TRANSITION_END, onFadeout);
+                ActionCreators.fire(_this.props.store.nextAction);
+            };
+            desc.addEventListener(game.EVT_TRANSITION_END, onFadeout);
+        }
     };
     Spec.prototype.render = function () {
         var cx = React.addons.classSet({

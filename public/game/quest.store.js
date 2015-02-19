@@ -8,6 +8,7 @@ var dispatcher = require("./app.dispatcher");
 var Payload = require("./app.payload");
 var BaseStore = require("./base.store");
 var ActionTypes = Payload.ActionTypes;
+var RunnerActions = Payload.RunnerActions;
 var Store = (function (_super) {
     __extends(Store, _super);
     function Store() {
@@ -20,24 +21,38 @@ var Store = (function (_super) {
         this.hide = true;
         this.hideClock = true;
         this.indexSelected = -1;
+        this.fireNextAction = false;
         this.dispatchToken = dispatcher.register(function (payload) {
             var action = payload.action;
-            var data = action.data;
             switch (action.type) {
+                case ActionTypes.HIDE_RUNNING:
+                    var data0 = action.data;
+                    if (data0.now == RunnerActions.QUEST) {
+                        _this.hide = true;
+                        _this.hideClock = true;
+                        _this.nextAction = data0.nextAction;
+                        _this.fireNextAction = false;
+                        _this.emitChange();
+                    }
+                    break;
                 case ActionTypes.SHOW_QUEST:
-                    _this.question = data.question;
-                    _this.choices = data.choices;
-                    _this.timeoutMax = data.timeoutMax;
-                    _this.defaultChoice = data.defaultChoice;
+                    var data1 = action.data;
+                    _this.question = data1.question;
+                    _this.choices = data1.choices;
+                    _this.timeoutMax = data1.timeoutMax;
+                    _this.defaultChoice = data1.defaultChoice;
                     _this.hideClock = (_this.timeoutMax == 0);
                     _this.indexSelected = -1;
                     _this.hide = false;
+                    _this.fireNextAction = false;
                     _this.emitChange();
                     break;
                 case ActionTypes.SELECT_QUEST:
+                    var data2 = action.data;
                     _this.hide = true;
                     _this.hideClock = true;
-                    _this.indexSelected = data.index;
+                    _this.indexSelected = data2.index;
+                    _this.fireNextAction = true;
                     _this.emitChange();
                     break;
             }

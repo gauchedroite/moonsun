@@ -52,8 +52,10 @@ var ClockSpec = (function (_super) {
             clearTimeout(this.handle);
             this.handle = 0;
         }
-        if (this.props.hideClock || this.props.timeoutMax == 0)
+        if (this.props.hideClock || this.props.timeoutMax == 0) {
+            ctx.clearRect(0, 0, 2 * clockX, 2 * clockY);
             return;
+        }
         var drawClock = function () {
             var timeoutMax = _this.props.timeoutMax;
             ctx.fillStyle = "white";
@@ -161,13 +163,18 @@ var Spec = (function (_super) {
         })));
     };
     Spec.prototype._onChange = function () {
+        var _this = this;
         if (this.props.store.hide == false) {
             this.setState({ hideChoice: true });
             this.setState({ hideChoice: false });
         }
         else {
             this.forceUpdate();
-            setTimeout(ActionCreators.questAnimDone, 750);
+            if (this.props.store.fireNextAction) {
+                setTimeout(function () {
+                    ActionCreators.fire(_this.props.store.nextAction);
+                }, 1000);
+            }
         }
     };
     Spec.prototype._onClick = function (index, clientX, clientY) {
