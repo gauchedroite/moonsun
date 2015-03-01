@@ -6,6 +6,9 @@ var Question = require("./Question");
 var Game = (function () {
     function Game(runner) {
         this.runner = runner;
+        this.needToInitialize = true;
+        this.needToSelectNextBlock = true;
+        this.playing = null;
         this.gameDataList = new xData.GameDataList();
         this.gameState = new xData.GameState();
         return this;
@@ -41,47 +44,57 @@ var Game = (function () {
     Game.prototype.newQuestion = function (level) {
         return new Question(level);
     };
-    Game.prototype.onGameEvent = function (eventName) {
-        this.clearAllState();
-    };
-    Game.prototype.Play = function (level) {
+    Game.prototype.getNextMove = function () {
         var _this = this;
-        level.load();
-        var playing = null;
-        var ready = false;
-        this.runner.ready();
-        this.runner.onGameEvent = this.onGameEvent.bind(this);
-        this.clearAllState();
-        this.loadAllState();
-        var playnext = function () {
-            if (playing != null) {
-                if (playing.funDone_curious_internal != undefined)
-                    playing.funDone_curious_internal();
-                _this.saveAllState();
-            }
-            var readyList = new Array();
-            for (var index = 0; index < _this.gameDataList.length; index++) {
-                var gameData = _this.gameDataList.at(index);
-                if (gameData.processed == false) {
-                    ready = gameData.playable.funWhen_curious_internal();
-                    if (ready)
-                        readyList.push(gameData);
+        if (this.needToInitialize) {
+            this.needToInitialize = false;
+            this.clearAllState();
+            this.loadAllState();
+        }
+        var getNextBlockIfNeeded = function () {
+            if (_this.needToSelectNextBlock) {
+                _this.needToSelectNextBlock = false;
+                if (_this.playing != null) {
+                    if (_this.playing.funDone_curious_internal != undefined)
+                        _this.playing.funDone_curious_internal();
+                    _this.saveAllState();
                 }
-            }
-            if (readyList.length == 0) {
-                _this.runner.gameOver();
-                _this.clearAllState();
-                return;
-            }
-            else {
+                var readyList = new Array();
+                for (var index = 0; index < _this.gameDataList.length; index++) {
+                    var gameData = _this.gameDataList.at(index);
+                    if (gameData.processed == false) {
+                        var ready = gameData.playable.funWhen_curious_internal();
+                        if (ready)
+                            readyList.push(gameData);
+                    }
+                }
+                if (readyList.length == 0) {
+                    _this.runner.gameOver();
+                    _this.clearAllState();
+                    return null;
+                }
                 var index = Misc.randomFromInterval(0, readyList.length - 1);
                 var gameData = readyList[index];
-                playing = gameData.playable;
-                gameData.playable.play_curious_internal(_this.runner, playnext);
                 gameData.processed = true;
+                _this.playing = gameData.playable;
             }
+            return _this.playing;
         };
-        playnext();
+        var playing = getNextBlockIfNeeded();
+        if (playing == null)
+            return { type: "GAMEOVER" };
+        var move = playing.step_curious_internal(this.runner);
+        if (move == null) {
+            this.needToSelectNextBlock = true;
+            playing = getNextBlockIfNeeded();
+            if (playing == null)
+                return { type: "GAMEOVER" };
+            move = playing.step_curious_internal(this.runner);
+        }
+        return move;
+    };
+    Game.prototype.answerQuest = function (choice) {
+        this.playing.answerQuest(choice);
     };
     return Game;
 })();

@@ -22,20 +22,19 @@ var CinemaStore = (function (_super) {
         this.dispatchToken = dispatcher.register(function (payload) {
             var action = payload.action;
             switch (action.type) {
-                case ActionTypes.HIDE_RUNNING:
-                    var data0 = action.data;
-                    if (data0.now == RunnerActions.ANIM) {
-                        setTimeout(function () {
-                            ActionCreators.fire(data0.nextAction);
-                        }, 10);
-                    }
-                    break;
                 case ActionTypes.SHOW_ANIM:
                     var data1 = action.data;
                     _this.text = data1.text;
                     _this.url = data1.url;
                     _this.emitChange();
                     break;
+                case ActionTypes.HIDE_MOVE:
+                    var data2 = action.data;
+                    if (data2.move == 0 /* SHOW */) {
+                        setTimeout(function () {
+                            ActionCreators.showMove();
+                        }, 10);
+                    }
             }
             ;
         });

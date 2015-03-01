@@ -20,10 +20,9 @@ var Spec = (function (_super) {
         this.props.store.removeAllListeners();
     };
     Spec.prototype.componentDidUpdate = function () {
-        var _this = this;
         if (this.props.store.hideText) {
             setTimeout(function () {
-                ActionCreators.fire(_this.props.store.nextAction);
+                ActionCreators.showMove();
             }, 150);
         }
     };

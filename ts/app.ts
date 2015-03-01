@@ -1,8 +1,6 @@
 ﻿/// <reference path="typings/tsd.d.ts" />
 
 import React = require("react");
-import Game = require("./curious/Game");
-import Level = require("./assets/level-001-intro");
 import GameInit = require("./helpers/GameInit");
 import AppComponent = require("./game/app.component");
 import AppStore = require("./game/app.store");
@@ -24,9 +22,7 @@ window.onload = function () {
 
     new GameInit("id-game-wrapper");
 
-    var game = new Game(store);
-    var level = new Level(game);
-    game.Play(level);
+    store.startGame();
 };
 
 

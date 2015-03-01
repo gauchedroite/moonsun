@@ -3,49 +3,45 @@ var dispatcher = require("./app.dispatcher");
 var AppActionCreators = (function () {
     function AppActionCreators() {
     }
-    AppActionCreators.fire = function (action) {
-        dispatcher.handleViewAction(action);
-    };
     AppActionCreators.clicked = function () {
         var action = {
             type: Payload.ActionTypes.CLICK
         };
         dispatcher.handleViewAction(action);
     };
-    AppActionCreators.hideRunningPrepareNextFire = function (now, next, nextAction) {
+    AppActionCreators.hideMove = function (move, nextMove) {
         var action = {
-            type: Payload.ActionTypes.HIDE_RUNNING,
+            type: Payload.ActionTypes.HIDE_MOVE,
             data: {
-                now: now,
-                next: next,
-                nextAction: nextAction
+                move: move,
+                nextMove: nextMove
             }
         };
         dispatcher.handleViewAction(action);
     };
-    AppActionCreators.buildShowAnim = function (text, url) {
-        return {
+    AppActionCreators.showMove = function () {
+        var action = {
+            type: Payload.ActionTypes.SHOW_MOVE
+        };
+        dispatcher.handleViewAction(action);
+    };
+    AppActionCreators.showAnim = function (text, url) {
+        var action = {
             type: Payload.ActionTypes.SHOW_ANIM,
             data: {
                 text: text,
                 url: url
             }
         };
-    };
-    AppActionCreators.showAnim = function (text, url) {
-        var action = AppActionCreators.buildShowAnim(text, url);
         dispatcher.handleViewAction(action);
     };
-    AppActionCreators.buildShowDescription = function (text) {
-        return {
+    AppActionCreators.showDescription = function (text) {
+        var action = {
             type: Payload.ActionTypes.SHOW_DESCRIPTION,
             data: {
                 text: text
             }
         };
-    };
-    AppActionCreators.showDescription = function (text) {
-        var action = AppActionCreators.buildShowDescription(text);
         dispatcher.handleViewAction(action);
     };
     AppActionCreators.showPop = function (text) {
@@ -73,20 +69,17 @@ var AppActionCreators = (function () {
         };
         dispatcher.handleViewAction(action);
     };
-    AppActionCreators.buildShowLine = function (text) {
-        return {
+    AppActionCreators.showLine = function (text) {
+        var action = {
             type: Payload.ActionTypes.SHOW_LINE,
             data: {
                 text: text
             }
         };
-    };
-    AppActionCreators.showLine = function (text) {
-        var action = AppActionCreators.buildShowLine(text);
         dispatcher.handleViewAction(action);
     };
-    AppActionCreators.buildShowQuest = function (question, choices, timeoutMax, defaultChoice) {
-        return {
+    AppActionCreators.showQuest = function (question, choices, timeoutMax, defaultChoice) {
+        var action = {
             type: Payload.ActionTypes.SHOW_QUEST,
             data: {
                 question: question,
@@ -95,9 +88,6 @@ var AppActionCreators = (function () {
                 defaultChoice: defaultChoice
             }
         };
-    };
-    AppActionCreators.showQuest = function (question, choices, timeoutMax, defaultChoice) {
-        var action = AppActionCreators.buildShowQuest(question, choices, timeoutMax, defaultChoice);
         dispatcher.handleViewAction(action);
     };
     AppActionCreators.selectQuest = function (index) {

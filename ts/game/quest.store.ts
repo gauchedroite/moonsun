@@ -17,7 +17,6 @@ class Store extends BaseStore {
     public hide: boolean = true;
     public hideClock: boolean = true;
     public indexSelected: number = -1;
-    public nextAction: any;
     public fireNextAction: boolean = false;
 
     constructor() {
@@ -27,17 +26,6 @@ class Store extends BaseStore {
             var action = payload.action;
 
             switch (action.type) {
-                case ActionTypes.HIDE_RUNNING:
-                    var data0 = <Payload.IHideRunning>action.data;
-                    if (data0.now == RunnerActions.QUEST) {
-                        this.hide = true;
-                        this.hideClock = true;
-                        this.nextAction = data0.nextAction;
-                        this.fireNextAction = false;
-                        this.emitChange();
-                    }
-                    break;
-
                 case ActionTypes.SHOW_QUEST:
                     var data1 = action.data;
                     this.question = data1.question;

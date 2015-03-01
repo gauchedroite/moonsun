@@ -23,7 +23,7 @@ class Spec extends TypedReact.Component<IProps, any> {
             var desc = <HTMLDivElement>this.getDOMNode();
             var onFadeout = (event) => {
                 desc.removeEventListener(game.EVT_TRANSITION_END, onFadeout);
-                ActionCreators.fire(this.props.store.nextAction);
+                ActionCreators.showMove();
             };
             desc.addEventListener(game.EVT_TRANSITION_END, onFadeout);
         }

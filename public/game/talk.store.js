@@ -21,10 +21,18 @@ var Store = (function (_super) {
         this.dispatchToken = dispatcher.register(function (payload) {
             var action = payload.action;
             switch (action.type) {
-                case ActionTypes.HIDE_RUNNING:
-                    var data0 = action.data;
-                    if (data0.now == RunnerActions.LINE) {
-                        if (data0.next == RunnerActions.LINE || data0.next == RunnerActions.QUEST) {
+                case ActionTypes.SHOW_LINE:
+                    var data1 = action.data;
+                    _this.text = data1.text;
+                    _this.hide = false;
+                    _this.hideText = false;
+                    _this.collapse = false;
+                    _this.emitChange();
+                    break;
+                case ActionTypes.HIDE_MOVE:
+                    var data2 = action.data;
+                    if (data2.move == 3 /* LINE */) {
+                        if (data2.nextMove == 3 /* LINE */) {
                             _this.hideText = true;
                             _this.emitChange();
                         }
@@ -34,17 +42,7 @@ var Store = (function (_super) {
                             _this.collapse = true;
                             _this.emitChange();
                         }
-                        _this.nextAction = data0.nextAction;
                     }
-                    break;
-                case ActionTypes.SHOW_LINE:
-                    var data1 = action.data;
-                    _this.text = data1.text;
-                    _this.hide = false;
-                    _this.hideText = false;
-                    _this.collapse = false;
-                    _this.emitChange();
-                    break;
             }
             ;
         });

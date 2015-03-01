@@ -25,12 +25,12 @@ class Spec extends TypedReact.Component<IProps, any> {
             var text = talk.firstElementChild;
             var onFadeout = (event) => {
                 text.removeEventListener(game.EVT_TRANSITION_END, onFadeout);
-                ActionCreators.fire(this.props.store.nextAction);
+                ActionCreators.showMove();
             };
             text.addEventListener(game.EVT_TRANSITION_END, onFadeout);
             */
             setTimeout(() => {
-                ActionCreators.fire(this.props.store.nextAction);
+                ActionCreators.showMove();
             }, 150);
         }
     }

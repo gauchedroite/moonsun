@@ -20,20 +20,18 @@ var Store = (function (_super) {
         this.dispatchToken = dispatcher.register(function (payload) {
             var action = payload.action;
             switch (action.type) {
-                case ActionTypes.HIDE_RUNNING:
-                    var data0 = action.data;
-                    if (data0.now == RunnerActions.DESC) {
-                        _this.hide = true;
-                        _this.nextAction = data0.nextAction;
-                        _this.emitChange();
-                    }
-                    break;
                 case ActionTypes.SHOW_DESCRIPTION:
                     var data1 = action.data;
                     _this.text = data1.text;
                     _this.hide = false;
                     _this.emitChange();
                     break;
+                case ActionTypes.HIDE_MOVE:
+                    var data2 = action.data;
+                    if (data2.move == 1 /* DESC */) {
+                        _this.hide = true;
+                        _this.emitChange();
+                    }
             }
             ;
         });

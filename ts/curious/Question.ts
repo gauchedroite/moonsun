@@ -22,12 +22,27 @@ class QuestionData {
     }
 }
 
+enum AnimType {
+    SHOW = 0, DESC = 1, HEAD = 2, LINE = 3, QUEST = 4, GAMEOVER = 5
+}
+
 enum QuestionType {
     SHOW = 0, HEAD = 1, ASK = 2, CHOICE = 3, DEFAULTANSWER = 4, DELAY = 5
 }
 
 class Question implements IQuestion, IPlayableQuestion {
+    private initialized: boolean = false;
+    private question: string = null;
+    private choices = new Array<string>();
+    private choicesMap = new Array<number>();
+    private answers: { (): void }[] = [];     // Array of functions because "(ParamList) => ReturnType" == "{ (ParamList): ReturnType }"
     private data = new Array<QuestionData>();
+    private timeout_ = 0;
+    private choice_ = 0;
+    private index: number = 0;
+    private currentData: QuestionData;
+    private questShowned: boolean = false;
+    //
     funWhen_curious_internal: () => boolean = () => { return false; };
     funDone_curious_internal: () => void = () => { };
 
@@ -76,116 +91,104 @@ class Question implements IQuestion, IPlayableQuestion {
     //
     //
     //
-    play_curious_internal(runner: IRunner, completed: () => void) {
+    step_curious_internal(runner: IRunner): any {
+        var data = this.currentData;
 
-        var question: string;
-        var choices = new Array<string>();
-        var choicesMap = new Array<number>();
-        var imap = 0;
-        var answers: { (): void }[] = [];     // Array of functions because "(ParamList) => ReturnType" == "{ (ParamList): ReturnType }"
-        var timeout_ = 0;
-        var choice_ = 0;
+        if (this.initialized == false) {
+            this.initialized = true;
+            var imap = 0;
 
-        for (var index = 0; index < this.data.length; index++) {
-            var currentData = this.data[index];
-            var ok = true;
-            if (currentData.when != undefined)
-                ok = currentData.when();
-            if (ok) {
-                if (currentData.type == QuestionType.ASK)
-                    question = currentData.text;
-                if (currentData.type == QuestionType.CHOICE) {
-                    choices.push(currentData.text);
-                    answers.push(currentData.done.bind(this.level));
-                    choicesMap.push(imap);
-                    imap++;
+            for (var ix = 0; ix < this.data.length; ix++) {
+                var ixData = this.data[ix];
+                var ok = true;
+                if (ixData.when != undefined)
+                    ok = ixData.when();
+                if (ok) {
+                    if (ixData.type == QuestionType.ASK)
+                        this.question = ixData.text;
+                    if (ixData.type == QuestionType.CHOICE) {
+                        this.choices.push(ixData.text);
+                        this.answers.push(ixData.done.bind(this.level));
+                        this.choicesMap.push(imap);
+                        imap++;
+                    }
+                    if (ixData.type == QuestionType.DEFAULTANSWER)
+                        this.choice_ = +ixData.text;
+                    if (ixData.type == QuestionType.DELAY)
+                        this.timeout_ = +ixData.text;
                 }
-                if (currentData.type == QuestionType.DEFAULTANSWER)
-                    choice_ = +currentData.text;
-                if (currentData.type == QuestionType.DELAY)
-                    timeout_ = +currentData.text;
-            }
-            else {
-                if (currentData.type == QuestionType.CHOICE) {
-                    choicesMap.push(-1);
+                else {
+                    if (ixData.type == QuestionType.CHOICE) {
+                        this.choicesMap.push(-1);
+                    }
                 }
             }
         }
 
-        var onanswer = (choice: number) => {
-            //The only way to get -1 is when a timeout expires and the matching default answer was filtered out.
-            if (choice != -1) {
-                for (var i = 0; i < choicesMap.length; i++) {
-                    if (choicesMap[i] == choice) {
-                        choice = i;
-                        break;
-                    }
-                }
-
-                var funAnswer = answers[choice];
-                if (funAnswer != undefined) {
-                    funAnswer();
+        var found = false;
+        while (this.index != this.data.length) {
+            data = this.currentData = this.data[this.index];
+            this.index++;
+            if (data.type == QuestionType.SHOW || data.type == QuestionType.HEAD) {
+                var ok = true;
+                if (data.when != undefined)
+                    ok = data.when();
+                if (ok) {
+                    found = true;
+                    break;
                 }
             }
-            completed();
-        };
-
-        this.play_anim_actions(runner, () => {
-            runner.showQuestion(question, choices, timeout_, choicesMap[choice_], onanswer);
-        });
-    }
-
-    private play_anim_actions(runner: IRunner, completed: () => void) {
-        var index = 0;
-        var currentData: QuestionData;
-
-        var iterateAnim = () => {
-            while (index != this.data.length) {
-                currentData = this.data[index];
-                index++;
-                if (currentData.type == QuestionType.SHOW || currentData.type == QuestionType.HEAD) {
-                    var ok = true;
-                    if (currentData.when != undefined)
-                        ok = currentData.when();
-                    if (ok) {
-                        return currentData;
-                    }
-                }
-            }
-            return null;
         }
 
-        var onnext = () => {
-            if (currentData != undefined && currentData.done != undefined)
-                currentData.done();
-
-            var data = iterateAnim();
-            if (data == null) {
-                completed();
-                return;
-            }
-            runProper(runner, data, onnext);
-        };
-
-        var runProper = (runner: IRunner, data: QuestionData, nextEvent: () => void): void => {
-            if (data == null)
-                nextEvent();
-
+        if (found) {
             if (data.type == QuestionType.SHOW) {
-                runner.showAnim(
-                    data.text,
-                    Misc.fixText(this.level, this.level.imgFolder + data.url),
-                    nextEvent);
+                return {
+                    type: AnimType.SHOW,
+                    text: data.text,
+                    url: Misc.fixText(this.level, this.level.imgFolder + data.url)
+                };
             }
             else if (data.type == QuestionType.HEAD) {
-                runner.setHead(
-                    data.text,
-                    this.level.imgFolder + data.url,
-                    nextEvent);
+                return {
+                    type: AnimType.HEAD,
+                    talker: data.text,
+                    url: this.level.imgFolder + data.url
+                }
             }
         }
 
-        runProper(runner, iterateAnim(), onnext);
+        if (this.questShowned == false) {
+            this.questShowned = true;
+
+            return {
+                type: AnimType.QUEST,
+                question: this.question,
+                choices: this.choices,
+                timeout: this.timeout_,
+                defaultChoice: this.choicesMap[this.choice_]
+            }
+        }
+
+        this.index = 0;
+        this.questShowned = false;
+        return null;
+    }
+
+    public answerQuest(choice: number) {
+        //The only way to get -1 is when a timeout expires and the matching default answer was filtered out.
+        if (choice != -1) {
+            for (var i = 0; i < this.choicesMap.length; i++) {
+                if (this.choicesMap[i] == choice) {
+                    choice = i;
+                    break;
+                }
+            }
+
+            var funAnswer = this.answers[choice];
+            if (funAnswer != undefined) {
+                funAnswer();
+            }
+        }
     }
 }
 

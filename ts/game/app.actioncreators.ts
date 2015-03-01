@@ -4,10 +4,6 @@ import dispatcher = require("./app.dispatcher");
 
 
 class AppActionCreators {
-    static fire = (action: any) => {
-        dispatcher.handleViewAction(action);
-    }
-
     static clicked = () => {
         var action = {
             type: Payload.ActionTypes.CLICK
@@ -15,42 +11,42 @@ class AppActionCreators {
         dispatcher.handleViewAction(action);
     }
 
-    static hideRunningPrepareNextFire = (now: string, next: string, nextAction: any) => {
+    static hideMove = (move: string, nextMove: string) => {
         var action = {
-            type: Payload.ActionTypes.HIDE_RUNNING,
-            data: <Payload.IHideRunning> {
-                now: now,
-                next: next,
-                nextAction: nextAction
+            type: Payload.ActionTypes.HIDE_MOVE,
+            data: {
+                move: move,
+                nextMove: nextMove
             }
         }
         dispatcher.handleViewAction(action);
     }
 
-    static buildShowAnim = (text: string, url: string) => {
-        return {
+    static showMove = () => {
+        var action = {
+            type: Payload.ActionTypes.SHOW_MOVE
+        }
+        dispatcher.handleViewAction(action);
+    }
+
+    static showAnim = (text: string, url: string) => {
+        var action = {
             type: Payload.ActionTypes.SHOW_ANIM,
             data: {
                 text: text,
                 url: url
             }
         };
-    }
-    static showAnim = (text: string, url: string) => {
-        var action = AppActionCreators.buildShowAnim(text, url);
         dispatcher.handleViewAction(action);
     }
 
-    static buildShowDescription = (text: string) => {
-        return {
+    static showDescription = (text: string) => {
+        var action = {
             type: Payload.ActionTypes.SHOW_DESCRIPTION,
             data: {
                 text: text
             }
         };
-    }
-    static showDescription = (text: string) => {
-        var action = AppActionCreators.buildShowDescription(text);
         dispatcher.handleViewAction(action);
     }
 
@@ -82,21 +78,18 @@ class AppActionCreators {
         dispatcher.handleViewAction(action);
     }
 
-    static buildShowLine = (text: string) => {
-        return {
+    static showLine = (text: string) => {
+        var action = {
             type: Payload.ActionTypes.SHOW_LINE,
             data: {
                 text: text
             }
         };
-    }
-    static showLine = (text: string) => {
-        var action = AppActionCreators.buildShowLine(text);
         dispatcher.handleViewAction(action);
     }
 
-    static buildShowQuest = (question: string, choices: Array<string>, timeoutMax: number, defaultChoice: number) => {
-        return {
+    static showQuest = (question: string, choices: Array<string>, timeoutMax: number, defaultChoice: number) => {
+        var action = {
             type: Payload.ActionTypes.SHOW_QUEST,
             data: {
                 question: question,
@@ -104,10 +97,7 @@ class AppActionCreators {
                 timeoutMax: timeoutMax,
                 defaultChoice: defaultChoice
             }
-        }
-    }
-    static showQuest = (question: string, choices: Array<string>, timeoutMax: number, defaultChoice: number) => {
-        var action = AppActionCreators.buildShowQuest(question, choices, timeoutMax, defaultChoice);
+        };
         dispatcher.handleViewAction(action);
     }
 

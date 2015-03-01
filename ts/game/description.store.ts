@@ -13,7 +13,6 @@ var RunnerActions = Payload.RunnerActions;
 class Store extends BaseStore {
     public text: string = "";
     public hide: boolean = true;
-    public nextAction: any;
 
     constructor() {
         super();
@@ -22,21 +21,19 @@ class Store extends BaseStore {
             var action = payload.action;
 
             switch (action.type) {
-                case ActionTypes.HIDE_RUNNING:
-                    var data0 = <Payload.IHideRunning>action.data;
-                    if (data0.now == RunnerActions.DESC) {
-                        this.hide = true;
-                        this.nextAction = data0.nextAction;
-                        this.emitChange();
-                    }
-                    break;
-
                 case ActionTypes.SHOW_DESCRIPTION:
                     var data1 = action.data;
                     this.text = data1.text;
                     this.hide = false;
                     this.emitChange();
                     break;
+
+                case ActionTypes.HIDE_MOVE:
+                    var data2 = action.data;
+                    if (data2.move == Payload.AnimType.DESC) {
+                        this.hide = true;
+                        this.emitChange();
+                    }
             };
         });
     }

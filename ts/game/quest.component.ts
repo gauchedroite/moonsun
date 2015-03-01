@@ -201,7 +201,7 @@ class Spec extends TypedReact.Component<IProps, IState> {
             this.forceUpdate();
             if (this.props.store.fireNextAction) {
                 setTimeout(() => {
-                    ActionCreators.fire(this.props.store.nextAction);
+                    ActionCreators.showMove();
                 }, 1000);//Leave time for the selected answer to blink
             }
         }

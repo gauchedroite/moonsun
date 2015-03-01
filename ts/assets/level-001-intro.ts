@@ -24,6 +24,7 @@ class Level_001_Intro implements ILevel {
     private set attrib(val: number) { this.game.setVar("attrib", val); }
 
     constructor(private game: Game) {
+        this.load();
     }
 
     load() {
@@ -43,8 +44,8 @@ class Level_001_Intro implements ILevel {
                 when: () => { return true; },
                 done: () => { this.attrib = 42; }
             })
-
 /*
+
             //.show("Mononcle", this.MASKINER)
             //.description("Le robot est en plein milieu de la rue.")
             //.description("Et il est pas mal gros.")

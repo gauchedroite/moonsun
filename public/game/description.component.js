@@ -21,12 +21,11 @@ var Spec = (function (_super) {
         this.props.store.removeAllListeners();
     };
     Spec.prototype.componentDidUpdate = function () {
-        var _this = this;
         if (this.props.store.hide) {
             var desc = this.getDOMNode();
             var onFadeout = function (event) {
                 desc.removeEventListener(game.EVT_TRANSITION_END, onFadeout);
-                ActionCreators.fire(_this.props.store.nextAction);
+                ActionCreators.showMove();
             };
             desc.addEventListener(game.EVT_TRANSITION_END, onFadeout);
         }

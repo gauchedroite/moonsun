@@ -15,6 +15,15 @@ var QuestionData = (function () {
     }
     return QuestionData;
 })();
+var AnimType;
+(function (AnimType) {
+    AnimType[AnimType["SHOW"] = 0] = "SHOW";
+    AnimType[AnimType["DESC"] = 1] = "DESC";
+    AnimType[AnimType["HEAD"] = 2] = "HEAD";
+    AnimType[AnimType["LINE"] = 3] = "LINE";
+    AnimType[AnimType["QUEST"] = 4] = "QUEST";
+    AnimType[AnimType["GAMEOVER"] = 5] = "GAMEOVER";
+})(AnimType || (AnimType = {}));
 var QuestionType;
 (function (QuestionType) {
     QuestionType[QuestionType["SHOW"] = 0] = "SHOW";
@@ -27,7 +36,16 @@ var QuestionType;
 var Question = (function () {
     function Question(level) {
         this.level = level;
+        this.initialized = false;
+        this.question = null;
+        this.choices = new Array();
+        this.choicesMap = new Array();
+        this.answers = [];
         this.data = new Array();
+        this.timeout_ = 0;
+        this.choice_ = 0;
+        this.index = 0;
+        this.questShowned = false;
         this.funWhen_curious_internal = function () {
             return false;
         };
@@ -63,98 +81,94 @@ var Question = (function () {
         this.funWhen_curious_internal = fun.bind(this.level);
         return this;
     };
-    Question.prototype.play_curious_internal = function (runner, completed) {
-        var question;
-        var choices = new Array();
-        var choicesMap = new Array();
-        var imap = 0;
-        var answers = [];
-        var timeout_ = 0;
-        var choice_ = 0;
-        for (var index = 0; index < this.data.length; index++) {
-            var currentData = this.data[index];
-            var ok = true;
-            if (currentData.when != undefined)
-                ok = currentData.when();
-            if (ok) {
-                if (currentData.type == 2 /* ASK */)
-                    question = currentData.text;
-                if (currentData.type == 3 /* CHOICE */) {
-                    choices.push(currentData.text);
-                    answers.push(currentData.done.bind(this.level));
-                    choicesMap.push(imap);
-                    imap++;
+    Question.prototype.step_curious_internal = function (runner) {
+        var data = this.currentData;
+        if (this.initialized == false) {
+            this.initialized = true;
+            var imap = 0;
+            for (var ix = 0; ix < this.data.length; ix++) {
+                var ixData = this.data[ix];
+                var ok = true;
+                if (ixData.when != undefined)
+                    ok = ixData.when();
+                if (ok) {
+                    if (ixData.type == 2 /* ASK */)
+                        this.question = ixData.text;
+                    if (ixData.type == 3 /* CHOICE */) {
+                        this.choices.push(ixData.text);
+                        this.answers.push(ixData.done.bind(this.level));
+                        this.choicesMap.push(imap);
+                        imap++;
+                    }
+                    if (ixData.type == 4 /* DEFAULTANSWER */)
+                        this.choice_ = +ixData.text;
+                    if (ixData.type == 5 /* DELAY */)
+                        this.timeout_ = +ixData.text;
                 }
-                if (currentData.type == 4 /* DEFAULTANSWER */)
-                    choice_ = +currentData.text;
-                if (currentData.type == 5 /* DELAY */)
-                    timeout_ = +currentData.text;
-            }
-            else {
-                if (currentData.type == 3 /* CHOICE */) {
-                    choicesMap.push(-1);
+                else {
+                    if (ixData.type == 3 /* CHOICE */) {
+                        this.choicesMap.push(-1);
+                    }
                 }
             }
         }
-        var onanswer = function (choice) {
-            if (choice != -1) {
-                for (var i = 0; i < choicesMap.length; i++) {
-                    if (choicesMap[i] == choice) {
-                        choice = i;
-                        break;
-                    }
-                }
-                var funAnswer = answers[choice];
-                if (funAnswer != undefined) {
-                    funAnswer();
-                }
-            }
-            completed();
-        };
-        this.play_anim_actions(runner, function () {
-            runner.showQuestion(question, choices, timeout_, choicesMap[choice_], onanswer);
-        });
-    };
-    Question.prototype.play_anim_actions = function (runner, completed) {
-        var _this = this;
-        var index = 0;
-        var currentData;
-        var iterateAnim = function () {
-            while (index != _this.data.length) {
-                currentData = _this.data[index];
-                index++;
-                if (currentData.type == 0 /* SHOW */ || currentData.type == 1 /* HEAD */) {
-                    var ok = true;
-                    if (currentData.when != undefined)
-                        ok = currentData.when();
-                    if (ok) {
-                        return currentData;
-                    }
+        var found = false;
+        while (this.index != this.data.length) {
+            data = this.currentData = this.data[this.index];
+            this.index++;
+            if (data.type == 0 /* SHOW */ || data.type == 1 /* HEAD */) {
+                var ok = true;
+                if (data.when != undefined)
+                    ok = data.when();
+                if (ok) {
+                    found = true;
+                    break;
                 }
             }
-            return null;
-        };
-        var onnext = function () {
-            if (currentData != undefined && currentData.done != undefined)
-                currentData.done();
-            var data = iterateAnim();
-            if (data == null) {
-                completed();
-                return;
-            }
-            runProper(runner, data, onnext);
-        };
-        var runProper = function (runner, data, nextEvent) {
-            if (data == null)
-                nextEvent();
+        }
+        if (found) {
             if (data.type == 0 /* SHOW */) {
-                runner.showAnim(data.text, Misc.fixText(_this.level, _this.level.imgFolder + data.url), nextEvent);
+                return {
+                    type: 0 /* SHOW */,
+                    text: data.text,
+                    url: Misc.fixText(this.level, this.level.imgFolder + data.url)
+                };
             }
             else if (data.type == 1 /* HEAD */) {
-                runner.setHead(data.text, _this.level.imgFolder + data.url, nextEvent);
+                return {
+                    type: 2 /* HEAD */,
+                    talker: data.text,
+                    url: this.level.imgFolder + data.url
+                };
             }
-        };
-        runProper(runner, iterateAnim(), onnext);
+        }
+        if (this.questShowned == false) {
+            this.questShowned = true;
+            return {
+                type: 4 /* QUEST */,
+                question: this.question,
+                choices: this.choices,
+                timeout: this.timeout_,
+                defaultChoice: this.choicesMap[this.choice_]
+            };
+        }
+        this.index = 0;
+        this.questShowned = false;
+        return null;
+    };
+    Question.prototype.answerQuest = function (choice) {
+        if (choice != -1) {
+            for (var i = 0; i < this.choicesMap.length; i++) {
+                if (this.choicesMap[i] == choice) {
+                    choice = i;
+                    break;
+                }
+            }
+            var funAnswer = this.answers[choice];
+            if (funAnswer != undefined) {
+                funAnswer();
+            }
+        }
     };
     return Question;
 })();

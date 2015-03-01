@@ -163,7 +163,6 @@ var Spec = (function (_super) {
         })));
     };
     Spec.prototype._onChange = function () {
-        var _this = this;
         if (this.props.store.hide == false) {
             this.setState({ hideChoice: true });
             this.setState({ hideChoice: false });
@@ -172,7 +171,7 @@ var Spec = (function (_super) {
             this.forceUpdate();
             if (this.props.store.fireNextAction) {
                 setTimeout(function () {
-                    ActionCreators.fire(_this.props.store.nextAction);
+                    ActionCreators.showMove();
                 }, 1000);
             }
         }

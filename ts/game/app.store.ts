@@ -1,6 +1,8 @@
 ﻿
 import TypedReact = require("typed-react");
 import IRunner = require("../curious/IRunner");
+import Game = require("../curious/Game");
+import Level = require("../assets/level-001-intro");
 import Payload = require("./app.payload");
 import dispatcher = require("./app.dispatcher");
 import CinemaStore = require("./cinema.store");
@@ -20,6 +22,9 @@ var RunnerActions = Payload.RunnerActions;
 //
 // Local variables
 //
+var game: Game = null;
+var level: Level = null;
+
 var cinema = new CinemaStore();
 var description = new DescriptionStore();
 var pop = new PopStore();
@@ -27,7 +32,6 @@ var head = new HeadStore();
 var talk = new TalkStore();
 var quest = new QuestStore();
 var menu = new MenuStore();
-
 
 class Store extends BaseStore implements IRunner {
     //
@@ -41,9 +45,7 @@ class Store extends BaseStore implements IRunner {
     //
     // Private variables and methods
     //
-    private gotoNext: () => void;
-    private running: string = null;
-    private selectedQuest: number = -1;
+    private move: any = null;
 
     //
     // Static methods for components to get access to (static) data
@@ -58,7 +60,7 @@ class Store extends BaseStore implements IRunner {
     static getMenu = () => { return menu; }
 
     //
-    // Could be saved in localStorage instead
+    // The appStore instance could have been saved in localStorage instead of the global window.
     //
     constructor() {
         super();
@@ -69,14 +71,11 @@ class Store extends BaseStore implements IRunner {
 
             switch (action.type) {
                 case ActionTypes.CLICK:
-                    setTimeout(this.gotoNext, 0);
+                    setTimeout(() => { this.endMove() }, 0);
                     break;
 
-                case ActionTypes.HIDE_RUNNING:
-                    var data0 = <Payload.IHideRunning>action.data;
-                    if (data0.now == null) {
-                        setTimeout(() => { ActionCreators.fire(data0.nextAction); }, 0);
-                    }
+                case ActionTypes.SHOW_MOVE:
+                    setTimeout(() => { this.startMove() }, 0);
                     break;
 
                 case ActionTypes.SHOW_QUEST:
@@ -87,9 +86,11 @@ class Store extends BaseStore implements IRunner {
                 case ActionTypes.SELECT_QUEST:
                     var data1 = action.data;
                     this.hideClicker = false;
-                    this.selectedQuest = data1.index;
                     this.emitChange();
-                    setTimeout(this.gotoNext, 0);
+                    setTimeout(() => {
+                        game.answerQuest(data1.index);
+                        this.endMove()
+                    }, 0);
                     break;
 
                 case ActionTypes.SHOW_FEEDBACK:
@@ -108,67 +109,46 @@ class Store extends BaseStore implements IRunner {
         });
     }
 
+    startGame() {
+        game = new Game(this);
+        level = new Level(game);
+        this.move = game.getNextMove();
+        this.startMove();
+    }
+
+    endMove() {
+        var currentType = this.move.type;
+        this.move = game.getNextMove();
+        ActionCreators.hideMove(currentType, this.move.type);
+    }
+
+    startMove() {
+        switch (this.move.type) {
+            case Payload.AnimType.SHOW:
+                ActionCreators.showAnim(this.move.text, this.move.url);
+                break;
+
+            case Payload.AnimType.DESC:
+                ActionCreators.showDescription(this.move.text);
+                break;
+
+            case Payload.AnimType.HEAD:
+                ActionCreators.setHead(this.move.talker, this.move.url);
+                this.move = game.getNextMove();
+                setTimeout(() => { this.startMove() }, 0);
+                break;
+
+            case Payload.AnimType.LINE:
+                ActionCreators.showLine(this.move.text);
+                break;
+
+            case Payload.AnimType.QUEST:
+                ActionCreators.showQuest(this.move.question, this.move.choices, this.move.timeout, this.move.defaultChoice);
+                break;
+        }
+    }
+
     //#region IRunner
-
-    //
-    // IRunner implementation
-    //
-
-    ready = (): void => {
-    };
-
-    showAnim = (text: string, url: string, nextEvent: () => void, immediate?: boolean): void => {
-        ActionCreators.hideRunningPrepareNextFire(
-            this.running,
-            RunnerActions.ANIM,
-            ActionCreators.buildShowAnim(text, url));
-
-        this.gotoNext = () => {
-            this.running = RunnerActions.ANIM;
-            nextEvent();
-        };
-    }
-
-    showDescription = (text: string, nextEvent: () => void, options?: IDescOptions): void => {
-        ActionCreators.hideRunningPrepareNextFire(
-            this.running,
-            RunnerActions.DESC,
-            ActionCreators.buildShowDescription(text));
-
-        this.gotoNext = () => {
-            this.running = RunnerActions.DESC;
-            nextEvent();
-        };
-    }
-
-    setHead = (talker: string, url: string, nextEvent: () => void): void => {
-        ActionCreators.setHead(talker, url);
-        setTimeout(nextEvent, 0);
-    };
-
-    showLine = (line: string, nextEvent: () => void): void => {
-        ActionCreators.hideRunningPrepareNextFire(
-            this.running,
-            RunnerActions.LINE,
-            ActionCreators.buildShowLine(line));
-
-        this.gotoNext = () => {
-            this.running = RunnerActions.LINE;
-            nextEvent();
-        };
-    };
-
-    showQuestion = (question: string, choices: Array<string>, timeoutMax: number, defaultChoice: number, answerEvent: (choice: number) => void): void => {
-        ActionCreators.hideRunningPrepareNextFire(
-            this.running,
-            RunnerActions.QUEST,
-            ActionCreators.buildShowQuest(question, choices, timeoutMax, defaultChoice));
-
-        this.gotoNext = () => {
-            this.running = RunnerActions.QUEST;
-            answerEvent(this.selectedQuest);
-        };
-    };
 
     popMessage = (message: string): void => {
         setTimeout(() => {
@@ -182,7 +162,6 @@ class Store extends BaseStore implements IRunner {
     };
 
     log = (text: string): void => { };
-    onGameEvent: (eventName: string) => void;
     preload = (assets: Array<string>): void => { };
 
     //#endregion

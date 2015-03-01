@@ -13,6 +13,9 @@ import IWhen = require("./IWhen");
 import IPlayable = require("./IPlayable");
 
 class Game {
+    private needToInitialize: boolean = true;
+    private needToSelectNextBlock: boolean = true;
+    private playing: IPlayable = null;
     private gameDataList = new xData.GameDataList();
     private gameState = new xData.GameState();
 
@@ -40,11 +43,11 @@ class Game {
         return this.gameState.data[key] = val;
     }
 
-  constructor(public runner: IRunner) {
+    constructor(public runner: IRunner) {
         return this;
     }
 
-  addAnim(anim: Anim): void {
+    addAnim(anim: Anim): void {
         this.gameDataList.add(anim);
     }
 
@@ -52,12 +55,12 @@ class Game {
         this.gameDataList.add(question);
     }
 
-  newAnim(level: ILevel): IWhenDone<IAnim> {
-    return new Anim(level);
+    newAnim(level: ILevel): IWhenDone<IAnim> {
+        return new Anim(level);
     }
 
-  newQuestion(level: ILevel): IWhen<IQuestion> {
-      return new Question(level);
+    newQuestion(level: ILevel): IWhen<IQuestion> {
+        return new Question(level);
     }
 
 
@@ -65,6 +68,8 @@ class Game {
     //
     // TODO LIST
     //
+    // Do not allow calls to the runner in level-001-intro.ts (e.g. game.runner.popMessage in LaFemmeEstSeule())
+    //  -> add the action in the gameDataList with some sort of high priority
     // Confirmation pour une nouvelle partie
     // Faire apparaitre le menu dans des bulles (fond mouvant)
     // intro screen
@@ -80,59 +85,68 @@ class Game {
     //
 
 
-    onGameEvent(eventName: string) {
-        this.clearAllState();
-    }
+    public getNextMove(): any {
+        if (this.needToInitialize) {
+            this.needToInitialize = false;
 
+            this.clearAllState();////////
+            this.loadAllState();
+        }
 
-    //
-    // Play()
-    //
-  public Play(level: ILevel) {
-        level.load();
+        var getNextBlockIfNeeded = (): IPlayable => {
+            if (this.needToSelectNextBlock) {
+                this.needToSelectNextBlock = false;
 
-    var playing: IPlayable = null;
-        var ready = false;
-
-        this.runner.ready();
-        this.runner.onGameEvent = this.onGameEvent.bind(this);
-
-        this.clearAllState();////////
-        this.loadAllState();
-
-        var playnext = () => {
-            if (playing != null) {
-                if (playing.funDone_curious_internal != undefined)
-                    playing.funDone_curious_internal();
-                this.saveAllState();
-            }
-
-            var readyList = new Array<xData.GameData>();
-
-            for (var index = 0; index < this.gameDataList.length; index++) {
-                var gameData = this.gameDataList.at(index);
-                if (gameData.processed == false) {
-                    ready = gameData.playable.funWhen_curious_internal();
-                    if (ready)
-                        readyList.push(gameData);
+                if (this.playing != null) {
+                    if (this.playing.funDone_curious_internal != undefined)
+                        this.playing.funDone_curious_internal();
+                    this.saveAllState();
                 }
-            }
 
-            if (readyList.length == 0) {
-                this.runner.gameOver();
-                this.clearAllState();
-                return;
-            }
-            else {
+                var readyList = new Array<xData.GameData>();
+
+                for (var index = 0; index < this.gameDataList.length; index++) {
+                    var gameData = this.gameDataList.at(index);
+                    if (gameData.processed == false) {
+                        var ready = gameData.playable.funWhen_curious_internal();
+                        if (ready)
+                            readyList.push(gameData);
+                    }
+                }
+
+                if (readyList.length == 0) {
+                    this.runner.gameOver();
+                    this.clearAllState();
+                    return null;
+                }
+
                 var index = Misc.randomFromInterval(0, readyList.length - 1);
                 var gameData = readyList[index];
-                playing = gameData.playable;
-                gameData.playable.play_curious_internal(this.runner, playnext);
                 gameData.processed = true;
+                this.playing = gameData.playable;
             }
+            return this.playing;
         };
 
-        playnext();
+        var playing = getNextBlockIfNeeded();
+        if (playing == null)
+            return { type: "GAMEOVER" };
+
+        var move = playing.step_curious_internal(this.runner);
+
+        if (move == null) {
+            this.needToSelectNextBlock = true;
+            playing = getNextBlockIfNeeded();
+            if (playing == null)
+                return { type: "GAMEOVER" };
+
+            move = playing.step_curious_internal(this.runner);
+        }
+        return move;
+    }
+
+    public answerQuest(choice: number) {
+        (<Question>this.playing).answerQuest(choice);
     }
 }
 

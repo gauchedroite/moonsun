@@ -15,6 +15,7 @@ var Level_001_Intro = (function () {
         this.PC_pourri = 4.0;
         this.PC_qaz = 5.0;
         this.PC_gameover = 99.0;
+        this.load();
     }
     Object.defineProperty(Level_001_Intro.prototype, "pc", {
         get: function () {

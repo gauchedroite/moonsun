@@ -10,7 +10,8 @@ var ActionTypes = (function () {
     function ActionTypes() {
     }
     ActionTypes.CLICK = "CLICK";
-    ActionTypes.HIDE_RUNNING = "HIDE_RUNNING";
+    ActionTypes.HIDE_MOVE = "HIDE_MOVE";
+    ActionTypes.SHOW_MOVE = "SHOW_MOVE";
     ActionTypes.CHANGE_CINEMA = "CHANGE_CINEMA";
     ActionTypes.SHOW_ANIM = "SHOW_ANIM";
     ActionTypes.SHOW_DESCRIPTION = "SHOW_DESCRIPTION";
@@ -42,3 +43,12 @@ var RunnerActions = (function () {
     return RunnerActions;
 })();
 exports.RunnerActions = RunnerActions;
+(function (AnimType) {
+    AnimType[AnimType["SHOW"] = 0] = "SHOW";
+    AnimType[AnimType["DESC"] = 1] = "DESC";
+    AnimType[AnimType["HEAD"] = 2] = "HEAD";
+    AnimType[AnimType["LINE"] = 3] = "LINE";
+    AnimType[AnimType["QUEST"] = 4] = "QUEST";
+    AnimType[AnimType["GAMEOVER"] = 5] = "GAMEOVER";
+})(exports.AnimType || (exports.AnimType = {}));
+var AnimType = exports.AnimType;

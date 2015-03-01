@@ -16,7 +16,8 @@ export class PayloadSources {
 
 export class ActionTypes {
     static CLICK = "CLICK";
-    static HIDE_RUNNING = "HIDE_RUNNING";
+    static HIDE_MOVE = "HIDE_MOVE";
+    static SHOW_MOVE = "SHOW_MOVE";
     static CHANGE_CINEMA = "CHANGE_CINEMA";
     static SHOW_ANIM = "SHOW_ANIM";
     static SHOW_DESCRIPTION = "SHOW_DESCRIPTION";
@@ -44,8 +45,6 @@ export class RunnerActions {
     static MENU = "MENU";
 }
 
-export interface IHideRunning {
-    now: string;
-    next: string;
-    nextAction: any;
+export enum AnimType {
+    SHOW = 0, DESC = 1, HEAD = 2, LINE = 3, QUEST = 4, GAMEOVER = 5
 }

@@ -4,6 +4,8 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+var Game = require("../curious/Game");
+var Level = require("../assets/level-001-intro");
 var Payload = require("./app.payload");
 var dispatcher = require("./app.dispatcher");
 var CinemaStore = require("./cinema.store");
@@ -17,6 +19,8 @@ var ActionCreators = require("./app.actioncreators");
 var BaseStore = require("./base.store");
 var ActionTypes = Payload.ActionTypes;
 var RunnerActions = Payload.RunnerActions;
+var game = null;
+var level = null;
 var cinema = new CinemaStore();
 var description = new DescriptionStore();
 var pop = new PopStore();
@@ -33,42 +37,7 @@ var Store = (function (_super) {
         this.feedbackX = -1;
         this.feedbackY = -1;
         this.showFeedback = false;
-        this.running = null;
-        this.selectedQuest = -1;
-        this.ready = function () {
-        };
-        this.showAnim = function (text, url, nextEvent, immediate) {
-            ActionCreators.hideRunningPrepareNextFire(_this.running, RunnerActions.ANIM, ActionCreators.buildShowAnim(text, url));
-            _this.gotoNext = function () {
-                _this.running = RunnerActions.ANIM;
-                nextEvent();
-            };
-        };
-        this.showDescription = function (text, nextEvent, options) {
-            ActionCreators.hideRunningPrepareNextFire(_this.running, RunnerActions.DESC, ActionCreators.buildShowDescription(text));
-            _this.gotoNext = function () {
-                _this.running = RunnerActions.DESC;
-                nextEvent();
-            };
-        };
-        this.setHead = function (talker, url, nextEvent) {
-            ActionCreators.setHead(talker, url);
-            setTimeout(nextEvent, 0);
-        };
-        this.showLine = function (line, nextEvent) {
-            ActionCreators.hideRunningPrepareNextFire(_this.running, RunnerActions.LINE, ActionCreators.buildShowLine(line));
-            _this.gotoNext = function () {
-                _this.running = RunnerActions.LINE;
-                nextEvent();
-            };
-        };
-        this.showQuestion = function (question, choices, timeoutMax, defaultChoice, answerEvent) {
-            ActionCreators.hideRunningPrepareNextFire(_this.running, RunnerActions.QUEST, ActionCreators.buildShowQuest(question, choices, timeoutMax, defaultChoice));
-            _this.gotoNext = function () {
-                _this.running = RunnerActions.QUEST;
-                answerEvent(_this.selectedQuest);
-            };
-        };
+        this.move = null;
         this.popMessage = function (message) {
             setTimeout(function () {
                 ActionCreators.showPop(message);
@@ -89,15 +58,14 @@ var Store = (function (_super) {
             var action = payload.action;
             switch (action.type) {
                 case ActionTypes.CLICK:
-                    setTimeout(_this.gotoNext, 0);
+                    setTimeout(function () {
+                        _this.endMove();
+                    }, 0);
                     break;
-                case ActionTypes.HIDE_RUNNING:
-                    var data0 = action.data;
-                    if (data0.now == null) {
-                        setTimeout(function () {
-                            ActionCreators.fire(data0.nextAction);
-                        }, 0);
-                    }
+                case ActionTypes.SHOW_MOVE:
+                    setTimeout(function () {
+                        _this.startMove();
+                    }, 0);
                     break;
                 case ActionTypes.SHOW_QUEST:
                     _this.hideClicker = true;
@@ -106,9 +74,11 @@ var Store = (function (_super) {
                 case ActionTypes.SELECT_QUEST:
                     var data1 = action.data;
                     _this.hideClicker = false;
-                    _this.selectedQuest = data1.index;
                     _this.emitChange();
-                    setTimeout(_this.gotoNext, 0);
+                    setTimeout(function () {
+                        game.answerQuest(data1.index);
+                        _this.endMove();
+                    }, 0);
                     break;
                 case ActionTypes.SHOW_FEEDBACK:
                     var data2 = action.data;
@@ -125,6 +95,41 @@ var Store = (function (_super) {
             ;
         });
     }
+    Store.prototype.startGame = function () {
+        game = new Game(this);
+        level = new Level(game);
+        this.move = game.getNextMove();
+        this.startMove();
+    };
+    Store.prototype.endMove = function () {
+        var currentType = this.move.type;
+        this.move = game.getNextMove();
+        ActionCreators.hideMove(currentType, this.move.type);
+    };
+    Store.prototype.startMove = function () {
+        var _this = this;
+        switch (this.move.type) {
+            case 0 /* SHOW */:
+                ActionCreators.showAnim(this.move.text, this.move.url);
+                break;
+            case 1 /* DESC */:
+                ActionCreators.showDescription(this.move.text);
+                break;
+            case 2 /* HEAD */:
+                ActionCreators.setHead(this.move.talker, this.move.url);
+                this.move = game.getNextMove();
+                setTimeout(function () {
+                    _this.startMove();
+                }, 0);
+                break;
+            case 3 /* LINE */:
+                ActionCreators.showLine(this.move.text);
+                break;
+            case 4 /* QUEST */:
+                ActionCreators.showQuest(this.move.question, this.move.choices, this.move.timeout, this.move.defaultChoice);
+                break;
+        }
+    };
     Store.getApp = function () {
         return window.appStore;
     };

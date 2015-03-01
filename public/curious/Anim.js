@@ -22,11 +22,14 @@ var AnimType;
     AnimType[AnimType["DESC"] = 1] = "DESC";
     AnimType[AnimType["HEAD"] = 2] = "HEAD";
     AnimType[AnimType["LINE"] = 3] = "LINE";
+    AnimType[AnimType["QUEST"] = 4] = "QUEST";
+    AnimType[AnimType["GAMEOVER"] = 5] = "GAMEOVER";
 })(AnimType || (AnimType = {}));
 var Anim = (function () {
     function Anim(level) {
         this.level = level;
         this.data = new Array();
+        this.index = 0;
         this.funWhen_curious_internal = function () {
             return false;
         };
@@ -61,48 +64,53 @@ var Anim = (function () {
         this.funDone_curious_internal = fun.bind(this.level);
         return this;
     };
-    Anim.prototype.play_curious_internal = function (runner, completed) {
-        var _this = this;
-        var index = 0;
-        var currentData;
-        var iterateAnim = function () {
-            while (index != _this.data.length) {
-                currentData = _this.data[index];
-                index++;
-                var ok = true;
-                if (currentData.when != undefined)
-                    ok = currentData.when();
-                if (ok) {
-                    return currentData;
-                }
+    Anim.prototype.step_curious_internal = function (runner) {
+        var data = this.currentData;
+        if (data != undefined && data.done != undefined)
+            data.done();
+        var found = false;
+        while (this.index != this.data.length) {
+            data = this.currentData = this.data[this.index];
+            this.index++;
+            var ok = true;
+            if (data.when != undefined)
+                ok = data.when();
+            if (ok) {
+                found = true;
+                break;
             }
-            return null;
-        };
-        var onnext = function () {
-            if (currentData != undefined && currentData.done != undefined)
-                currentData.done();
-            var data = iterateAnim();
-            if (data == null) {
-                completed();
-                return;
-            }
-            runProper(runner, data, onnext);
-        };
-        var runProper = function (runner, data, nextEvent) {
+        }
+        if (found) {
             if (data.type == 0 /* SHOW */) {
-                runner.showAnim(data.text, Misc.fixText(_this.level, _this.level.imgFolder + data.url), nextEvent);
+                return {
+                    type: data.type,
+                    text: data.text,
+                    url: Misc.fixText(this.level, this.level.imgFolder + data.url)
+                };
             }
             else if (data.type == 1 /* DESC */) {
-                runner.showDescription(Misc.fixText(_this.level, data.text), nextEvent, data.options);
+                return {
+                    type: data.type,
+                    text: Misc.fixText(this.level, data.text),
+                    options: data.options
+                };
             }
             else if (data.type == 3 /* LINE */) {
-                runner.showLine(Misc.fixText(_this.level, data.text), nextEvent);
+                return {
+                    type: data.type,
+                    text: Misc.fixText(this.level, data.text)
+                };
             }
             else if (data.type == 2 /* HEAD */) {
-                runner.setHead(data.text, _this.level.imgFolder + data.url, nextEvent);
+                return {
+                    type: data.type,
+                    talker: data.text,
+                    url: this.level.imgFolder + data.url
+                };
             }
-        };
-        runProper(runner, iterateAnim(), onnext);
+        }
+        this.index = 0;
+        return null;
     };
     return Anim;
 })();
